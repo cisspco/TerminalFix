@@ -1,0 +1,56 @@
+// TerminalFix campaign — Microsoft Defender XDR Advanced Hunting queries
+// Source: Microsoft Threat Intelligence, "TerminalFix campaign deploys a reverse tunnel
+// through multistage intrusion" (2026-08-28)
+
+// (a) PowerShell spawning cmd.exe with ProgramData staging path, 1.bat, and
+//     LockScreenContentServer.exe referenced together on the command line
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "powershell.exe"
+| where FileName =~ "cmd.exe"
+| where ProcessCommandLine has @"\ProgramData\"
+    and ProcessCommandLine has "1.bat"
+    and ProcessCommandLine has "LockScreenContentServer.exe"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName,
+    InitiatingProcessCommandLine, FileName, ProcessCommandLine
+
+// (b) LockScreenContentServer.exe running from anywhere other than
+//     C:\Windows\SystemApps (the only legitimate location)
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "LockScreenContentServer.exe"
+| where FolderPath !startswith @"C:\Windows\SystemApps"
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine,
+    InitiatingProcessFileName, InitiatingProcessCommandLine
+
+// (c) LockScreenContentServer.exe loading dui70.dll from its own (non-standard)
+//     directory instead of the legitimate System32/SystemApps location
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "LockScreenContentServer.exe"
+| where FileName =~ "dui70.dll"
+| where FolderPath !startswith @"C:\Windows\System32"
+    and FolderPath !startswith @"C:\Windows\SystemApps"
+| project Timestamp, DeviceName, AccountName, FolderPath,
+    InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+
+// (d) python.exe / pythonw.exe command lines referencing the TerminalFix
+//     reverse-tunnel implant (client.py, --server, --uuid, cert.pem, gitnow.dev)
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("python.exe", "pythonw.exe")
+| where ProcessCommandLine has "client.py"
+    or ProcessCommandLine has "--server"
+    or ProcessCommandLine has "--uuid"
+    or ProcessCommandLine has "cert.pem"
+    or ProcessCommandLine has "gitnow.dev"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+    InitiatingProcessFileName, InitiatingProcessCommandLine
+
+// (e) Network connections to known TerminalFix attacker infrastructure
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("gitnow.dev", "bestsocialmedianewspapper.com", "offlineupdater.com")
+    or InitiatingProcessCommandLine has_any ("gitnow.dev", "bestsocialmedianewspapper.com", "offlineupdater.com")
+| project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, RemotePort,
+    InitiatingProcessFileName, InitiatingProcessCommandLine

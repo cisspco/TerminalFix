@@ -1,0 +1,2 @@
+# DO NOT BLOCK — compromised victim sites, monitor only
+linked-log.com

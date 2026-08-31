@@ -1,0 +1,82 @@
+# TerminalFix Snapshot — 2026-08-31 UTC
+
+## 수집 상태
+- 페치 성공: [Microsoft Security Blog](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/)
+- 페치 차단: radar.offseq.com, gbhackers.com, cyberpress.org, cybersecuritynews.com, www.revel8.ai, www.huntress.com, www.originbrief.app
+- seed: 0 / 신규 검증: 15 (도메인 3 + 해시 11 + 원본 재확인) / 미검증: 0
+
+## 캠페인 개요
+TerminalFix는 ClickFix 소셜엔지니어링 기법의 변종으로, 피해자를 Windows Run 대화상자 대신 Windows Terminal/PowerShell로 유도해 더 복잡한 다단계 스크립트를 실행시킨다. 손상된 정상 웹사이트에 가짜 Cloudflare Turnstile CAPTCHA를 띄워 PowerShell 명령을 클립보드에 심고, 이를 붙여넣도록 유도한다. 이후 DLL 사이드로딩, PNG 스테가노그래피, 광범위한 AD 정찰, 그리고 커스텀 역방향 터널 임플란트를 통한 지속적 네트워크 레벨 프록시 접근으로 이어지는 다단계 침투 체인이다. 이번 실행에서 Microsoft 원문 재검증 외 새로운 인프라나 해시는 발견되지 않았다.
+
+## 공격 체인
+1. 가짜 CAPTCHA 유도 — 손상된 사이트 `linked-log[.]com`에 Cloudflare 로고·체크박스·스피너까지 모방한 가짜 Turnstile 오버레이 표시, "사람 확인" 명목으로 PowerShell 명령을 클립보드에 복사
+2. 초기 페이로드 실행 — 피해자가 Windows Terminal/PowerShell에 명령을 붙여넣으면 ZIP(`verify_pkg.zip`)을 다운로드해 `C:\ProgramData\<16-hex>\` (예: `C:\ProgramData\f47f2a8c21c9df4e`)에 압축 해제 후 `1.bat` 실행
+3. DLL 사이드로딩 — 정상 서명된 `LockScreenContentServer.exe`(정상 위치: `C:\Windows\SystemApps`)가 자신의 디렉터리에서 악성 `dui70.dll`을 로드
+4. 스테가노그래피 페이로드 — PNG 이미지 3장의 RGBA 픽셀 데이터에서 후속 단계 페이로드를 재조립
+5. 지속성 — HKCU Run 키(`...\Run\LockScreenContentServer_MuODG5yBM`) 및 동일 이름의 예약 작업이 약 60분마다 `LockScreenContentServer.exe` 재실행, 페이로드 디렉터리는 hidden+system 속성
+6. 내부 정찰 — `nltest`, `net group`, ADSI 쿼리로 도메인 트러스트/Domain Admins/AD 사용자·컴퓨터 열거, 내부 서버 추정 대상 핑 스윕
+7. 비동기 명령 실행 — PowerShell 파일감시 루프가 텍스트 파일에서 명령을 읽어 `Invoke-Expression`으로 실행하고 결과를 별도 파일에 기록
+8. 역방향 터널 — 공식 임베더블 Python 3.14.5 런타임으로 `pythonw.exe`가 `client.py`를 `--server`, `--uuid`, `cert.pem` 인자와 함께 실행, TLS/WebSocket으로 `gitnow[.]dev:443`에 연결해 도달 가능한 내부 IPv4/IPv6/호스트명으로 임의 TCP 트래픽 중계
+
+## 공격자 인프라 (차단 대상) (3)
+- gitnow[.]dev — 역방향 터널 C2, TCP/443 — verified
+- bestsocialmedianewspapper[.]com — 스테가노그래피 페이로드 전달(PNG RGBA 임베드) — verified
+- offlineupdater[.]com — 페이로드 전달 failover — verified
+
+## 손상된 정상 사이트 (차단 금지, 모니터링만) (1)
+- linked-log[.]com — 가짜 CAPTCHA 호스팅, 피해자 사이트(손상된 정상 사이트로 공격자 소유 아님) — verified
+
+## 파일 해시 (11)
+### SHA-256
+- `18c2090e8a0ae0568af9b87e59eaf8270f23d2909600ed9db91a9444fd8b278f` — 초기 ZIP (verify_pkg.zip) — verified
+- `b8d107800403b9197e5b7609ceacd8e4cac1b0f9a1d156e6dacd6c3f7794b36a` — 커스텀 역방향 터널 client.py — verified
+- `ba77feed86bcda49308746421bdc684a432dd5d68c363975b2a3c6831bda3f07` — 악성 dui70.dll — verified
+- `026478003fe354134c03acf6890e7d3b153ba08a836eca42350db48f213872ab` — 악성 dui70.dll — verified
+- `032b529fac61e550f5dc9489686f519b82d64625fa05a8d9ecf8ba8be9b2ad22` — 악성 dui70.dll — verified
+- `df8221a933b38284ebdcb8bffc2df62123c9f5b5f421dd0b070e13e668b3eabf` — 악성 dui70.dll — verified
+- `eb1b4be34d05b394fb74efdeb95faecd1d1963be6ecc1b9db2b4757b491f01f0` — 악성 dui70.dll — verified
+- `5d43abf5c36ea203176d3300ff14af27b4be81810ad2679b3a62b255e3d6e1c8` — 악성 dui70.dll — verified
+- `9a7b4dcd51d9251c177d323d6aaecdfc86674f69bc1af048dc872926d22aaa24` — 악성 dui70.dll — verified
+- `342df92235c9dec81203b837addaa38bb85b64b4a48fe71b5303ca86d991991e` — 악성 dui70.dll — verified
+- `ededeacf30e493dd632d477fe770ba419aa2848f685ea049381a0a8d2cc3e84d` — 악성 dui70.dll — verified
+
+## 호스트 IOC · 행위
+- `C:\ProgramData\<16-hex>\` (예: `f47f2a8c21c9df4e`) — 페이로드 스테이징 디렉터리, hidden+system 속성
+- `1.bat` — ProgramData 스테이징 디렉터리 내 배치 런처
+- `LockScreenContentServer.exe` — 정상 서명 바이너리, 정상 위치(`C:\Windows\SystemApps`) 외 실행 시 침해 신호
+- `dui70.dll` — LockScreenContentServer.exe와 동일 디렉터리에서 사이드로딩되는 악성 DLL
+- `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\LockScreenContentServer_MuODG5yBM` — Run 키 지속성
+- 예약 작업 `LockScreenContentServer_MuODG5yBM` — 약 60분마다 `LockScreenContentServer.exe` 재실행
+- `pythonw.exe` + `client.py --server --uuid cert.pem` — 역방향 터널 임플란트 실행 커맨드라인
+- 정찰: `nltest`, `net group`, ADSI 쿼리, 내부 서버 핑 스윕
+- PowerShell 파일감시 루프: 텍스트 파일 명령 → `Invoke-Expression` → 결과 파일 기록
+
+## 이번 실행 변경사항
+- 신규 인프라: 없음
+- 신규 해시: 없음
+- 승격(seed→검증): gitnow[.]dev, bestsocialmedianewspapper[.]com, offlineupdater[.]com, linked-log[.]com, 해시 11건 전체 — Microsoft 원문 본문 재확인(2026-08-28자 동일 소스, 이번 실행에서 직접 페치 성공)
+- 폐기(sinkhole/takedown): 없음
+- 신규 보고서: 없음 (Microsoft 원문 외 2차 보도는 모두 요약 스니펫만 확인, 본문 페치는 차단됨)
+
+## 인접 캠페인 (참고)
+- **DOUBLECUP** (2026-08, The Hacker News 검색 스니펫만 확인·본문 미페치) — 러시아계 Loader-as-a-Service. ClickFix 유인으로 브라우저 캐시에 스테가노그래피 PNG를 심고 CountLoader 및 신규 RAT `DeviceManager`(EtherHiding 기반 C2 확인, HTTP/DNS 터널링) 배포. TerminalFix와 무관한 별도 캠페인이나, PNG 스테가노그래피+ClickFix 기법 트렌드 참고용으로 기록. TerminalFix IOC 목록에는 포함하지 않음.
+
+## 차단 운영 포맷 (복붙용)
+
+### Domain blocklist (un-defanged, one per line — attacker infrastructure only)
+```
+bestsocialmedianewspapper.com
+gitnow.dev
+offlineupdater.com
+```
+
+## 출처
+- [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched
+- TerminalFix campaign deploys a reverse tunnel through multistage intrusion (Microsoft TI, 2026-08-28) — 2026-08-28 — seed (본 보고서 프롬프트 제공 베이스라인)
+- [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://radar.offseq.com/threat/terminalfix-campaign-deploys-a-reverse-tunnel-through-multistage-intrusion-44b4ed4ec50e4fda) — 2026-08 — blocked
+- [TerminalFix Uses Fake CAPTCHA, DLL Sideloading and Steganography to Breach Networks](https://gbhackers.com/terminalfix-uses-fake-captcha/) — 2026-08 — blocked
+- [TerminalFix Attack Uses Fake Cloudflare CAPTCHA to Deploy Reverse Tunnel Into Corporate Networks](https://cyberpress.org/terminalfix-opens-reverse-tunnels/) — 2026-08 — blocked
+- [Hackers Use Fake Cloudflare CAPTCHA to Deploy Reverse Tunnel Into Corporate Networks](https://cybersecuritynews.com/fake-cloudflare-captcha/) — 2026-08 — blocked
+- [ClickFix Attacks in 2026: 7 Variants, Real Attack Data & Defense Guide](https://www.revel8.ai/blog/threat-research-clickfix-attacks-2026) — 2026-08 — blocked
+- [ClickFix Gets Creative: Malware Buried in Images](https://www.huntress.com/blog/clickfix-malware-buried-in-images) — 2026 — blocked
+- [Cybersecurity Threats Weekly Report — 2026-08-31](https://www.originbrief.app/en/reports/cybersecurity-threats/2026-08-31/weekly) — 2026-08-31 — blocked
