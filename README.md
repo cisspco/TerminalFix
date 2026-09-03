@@ -2,7 +2,7 @@
 
 Defensive IOC tracker for the **TerminalFix** campaign — a ClickFix-derivative social-engineering intrusion chain (fake Cloudflare Turnstile CAPTCHA → clipboard-pasted PowerShell → DLL sideloading → PNG steganography → reverse WebSocket tunnel to `gitnow[.]dev`). Source: Microsoft Threat Intelligence, 2026-08-28, with daily automated re-checks for new reporting.
 
-**Last updated:** 2026-09-02 00:00 UTC
+**Last updated:** 2026-09-03 00:00 UTC
 
 ## Counts
 - Attacker infrastructure (blockable): 3
