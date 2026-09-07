@@ -30,6 +30,12 @@ Cumulative. Provenance noted per item.
 - `pythonw.exe` running `client.py` with `--server`, `--uuid`, `cert.pem` arguments — verified
 - TLS/WebSocket connection to `gitnow.dev:443`, relaying arbitrary TCP to internal IPv4/IPv6/hostnames reachable from the host — verified
 - Delivered via official embeddable Python 3.14.5 runtime — seed
+- `client.py` disables TLS certificate verification (`CERT_NONE`) — verified
+- WebSocket upgrade path `/tunnel` on the C2 endpoint — verified
+- Custom 7-byte binary framing header (message type + stream ID + length) multiplexes multiple relayed TCP connections over one WebSocket; 8 message types incl. keepalive and `MSG_SHUTDOWN` (calls `os._exit()` to bypass Python cleanup on remote shutdown) — verified
+- Rotates 4 realistic browser User-Agent strings (Chrome/Firefox/Safari) per connection; `DEBUG = False`, all logging to stderr for silent operation — verified
+- Malicious `dui70.dll` PE timestamp forged to year 2104 — verified
+- Initial PowerShell stage prints a fake green-text confirmation, e.g. "I am not a robot – Cloudflare ID: f47f2a8c21c9df4e" (ID matches the ProgramData staging folder name), to sell the fake CAPTCHA — verified
 
 ## Not observed
 Microsoft's analysis did not observe privilege escalation, security-control tampering, data exfiltration, or ransomware deployment in this chain. Do not assert these unless a fetched source in a future run reports them.
