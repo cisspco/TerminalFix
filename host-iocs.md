@@ -37,5 +37,12 @@ Cumulative. Provenance noted per item.
 - Malicious `dui70.dll` PE timestamp forged to year 2104 — verified
 - Initial PowerShell stage prints a fake green-text confirmation, e.g. "I am not a robot – Cloudflare ID: f47f2a8c21c9df4e" (ID matches the ProgramData staging folder name), to sell the fake CAPTCHA — verified
 
+## Reconnaissance — locale support
+- Recon scripts include English, Spanish, and German locale variants, suggesting an attempt to operate across systems configured in multiple languages — verified (2026-09-08 re-fetch of Microsoft original post)
+
+## Targeting / attribution
+- Microsoft's original post describes targeting broadly as "organizations across multiple industries" and does not attribute the campaign to any specific threat actor or nation-state — verified (2026-09-08 re-fetch)
+- A search-snippet claim that Rapid7 Labs attributed TerminalFix to a North Korea-linked actor targeting South Korea's automotive/media sectors could NOT be verified (Rapid7's site was blocked by egress). Cross-referencing suggests this likely conflates TerminalFix with a separate, unrelated Rapid7-reported DPRK campaign (Ted backdoor / curlRAT via trojanized HAProxy) that happens to target the same sectors/country. Not asserted as fact for TerminalFix — flagged unverified, see 2026-09-08 snapshot for detail.
+
 ## Not observed
 Microsoft's analysis did not observe privilege escalation, security-control tampering, data exfiltration, or ransomware deployment in this chain. Do not assert these unless a fetched source in a future run reports them.
