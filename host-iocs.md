@@ -41,7 +41,7 @@ Cumulative. Provenance noted per item.
 - Recon scripts include English, Spanish, and German locale variants, suggesting an attempt to operate across systems configured in multiple languages — verified (2026-09-08 re-fetch of Microsoft original post)
 
 ## Targeting / attribution
-- Microsoft's original post describes targeting broadly as "organizations across multiple industries" and does not attribute the campaign to any specific threat actor or nation-state — verified (re-fetched 2026-09-08, 2026-09-09; no new IOCs or attribution added)
+- Microsoft's original post describes targeting broadly as "organizations across multiple industries" and does not attribute the campaign to any specific threat actor or nation-state — verified (re-fetched 2026-09-08, 2026-09-09, 2026-09-11; no new IOCs or attribution added)
 - A search-snippet claim that Rapid7 Labs attributed TerminalFix to a North Korea-linked actor targeting South Korea's automotive/media sectors could NOT be verified (Rapid7's site was blocked by egress). Cross-referencing suggests this likely conflates TerminalFix with a separate, unrelated Rapid7-reported DPRK campaign (Ted backdoor / curlRAT via trojanized HAProxy) that happens to target the same sectors/country. Not asserted as fact for TerminalFix — flagged unverified, see 2026-09-08 snapshot for detail.
 
 ## Not observed
