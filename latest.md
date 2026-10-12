@@ -1,8 +1,8 @@
-# TerminalFix Snapshot — 2026-10-11 UTC
+# TerminalFix Snapshot — 2026-10-12 UTC
 
 ## 수집 상태
-- 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) (Microsoft, 재확인)
-- 페치 차단: securityarsenal[.]com, cirt.gov[.]bd, blog.gridinsoft[.]com, cyberexperts[.]com, hendryadrian[.]com, packetwatch[.]com, rhisac[.]org, socprime[.]com, europeanpurpose[.]com (전부 DNS 조회 실패/프록시 차단)
+- 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) (Microsoft, 재확인), Microsoft Security Blog 검색 페이지
+- 페치 차단: socprime[.]com (2건 시도, 전부 DNS 조회 실패), hendryadrian[.]com (DNS 조회 실패)
 - seed: 0 / 신규 검증: 0 / 미검증: 0 신규 (기존 11개 해시·3개 인프라 도메인은 이전 실행에서 이미 verified로 승격됨; 변동 없음)
 
 ## 캠페인 개요
@@ -48,11 +48,11 @@
 - 신규 해시: 없음
 - 승격(seed→검증): 없음 (전부 이전 실행에서 이미 완료)
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음 — Microsoft 원본 포스트만 재확인 성공, 신규 포스트 없음. securityarsenal[.]com, cirt.gov[.]bd, blog.gridinsoft[.]com, cyberexperts[.]com, hendryadrian[.]com, packetwatch[.]com, rhisac[.]org, socprime[.]com, europeanpurpose[.]com 등 9개 URL은 모두 DNS/프록시 차단으로 본문 확인 불가. 5개 고정 검색어의 snippet 상으로는 일반적인 ClickFix/가짜 Cloudflare Turnstile 보도(gbhackers, techradar, varonis, securityweek, cybersecuritynews, scamsandbox, besthub.dev)와 별개의 가짜 Windows Update 화면 + PNG 스테가노그래피 → LummaC2/Rhadamanthys 체인(csoonline, Huntress, Acronis FileFix 변종)이 재노출되었으나, 미끼·최종 페이로드·C2가 TerminalFix와 달라 별개 캠페인으로 판단하고 편입하지 않음. Berlin/BSI/Rhysida, STAC4924/Lorem Ipsum Loader 관련 미검증 서술은 이번 실행에서도 전용 재검색을 수행하지 않았고 일반 검색 결과에도 재노출되지 않음; 기존 미검증 상태 그대로 유지(`host-iocs.md` 참조)
+- 신규 보고서: 없음 — Microsoft 원본 포스트만 재확인 성공, 신규 포스트 없음. 이번 실행은 5개 고정 검색어 외에 Microsoft Security Blog 검색 페이지와 SOC Prime(socprime.com), hendryadrian.com 직접 페치를 시도했으나 socprime.com·hendryadrian.com 모두 DNS 조회 실패(프록시 차단)로 본문 확인 불가. 검색 snippet 상으로는 일반적인 ClickFix/가짜 Cloudflare Turnstile 보도와, "ClickFix smuggles payloads through [the Run dialog's 260-character limit]"라는 2026-10월 신규 변종(TheHackerNews/Secnews, VBScript+timeout.exe 프로세스 인젝션, PNG 스테가노그래피 아님)이 노출되었으나, 미끼·기술 메커니즘·최종 페이로드가 TerminalFix와 달라(Run 다이얼로그 길이 제한 악용이라는 별도 기법) 별개 캠페인으로 판단하고 편입하지 않음. Berlin/BSI/Rhysida, STAC4924/Lorem Ipsum Loader 관련 미검증 서술은 이번 실행에서도 전용 재검색을 수행하지 않았고 일반 검색 결과에도 재노출되지 않음; 기존 미검증 상태 그대로 유지(`host-iocs.md` 참조)
 
 ## 인접 캠페인 (참고)
+- "ClickFix smuggles payloads through" — Run 다이얼로그 260자 길이 제한을 악용해 VBScript로 추가 PowerShell을 받아오고, 최종적으로 `timeout.exe`에 인젝션하는 2026년 10월 신규 ClickFix 변종 (TheHackerNews/Secnews 보도) — TerminalFix와 무관한 별개 체인
 - 가짜 Windows Update 전체화면 + PNG 스테가노그래피 로더로 LummaC2/Rhadamanthys 전달 (Huntress/CSO Online류 보도, TerminalFix와 무관)
-- Acronis가 2025-09에 보고한 FileFix 변종도 스테가노그래피를 사용하나 별개 체인 (TerminalFix와 무관)
 - 일반적인 가짜 Cloudflare Turnstile 기반 ClickFix 보도(Stealc/Lumma/NetSupport Manager 페이로드) — TerminalFix와 별개의 더 넓은 ClickFix 생태계로 판단, 편입하지 않음
 - Berlin/BSI/Rhysida, STAC4924/Lorem Ipsum Loader 관련 미검증 서술은 이번 실행에서도 전용 재검색 수행하지 않음; 기존 미검증 상태 그대로 유지 (`host-iocs.md` 참조)
 
@@ -67,12 +67,5 @@ offlineupdater.com
 
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched
-- SecurityArsenal TerminalFix defense write-up (securityarsenal[.]com) — 날짜 미확인 — blocked
-- BGD e-GOV CIRT TerminalFix advisory (cirt.gov[.]bd) — 2026-09-02 — blocked
-- GridinSoft "TerminalFix Turns Fake CAPTCHA Into a Network Tunnel" (blog.gridinsoft[.]com) — 날짜 미확인 — blocked
-- CyberExperts TerminalFix coverage (cyberexperts[.]com) — 날짜 미확인 — blocked
-- hendryadrian.com TerminalFix repost — 날짜 미확인 — blocked
-- PacketWatch cyber threat intel report 09-08-2026 (packetwatch[.]com) — 2026-09-08 — blocked
-- RH-ISAC "TerminalFix Campaign Targets Multiple Critical Sectors" (rhisac[.]org) — 2026-09-01 — blocked
 - SOC Prime TerminalFix detection rules (socprime[.]com) — 날짜 미확인 — blocked
-- europeanpurpose.com "TerminalFix Exploits Fake CAPTCHAs for Cyber Intrusion" — 날짜 미확인 — blocked
+- hendryadrian.com TerminalFix repost — 날짜 미확인 — blocked
