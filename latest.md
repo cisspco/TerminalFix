@@ -1,9 +1,9 @@
-# TerminalFix Snapshot — 2026-10-12 UTC
+# TerminalFix Snapshot — 2026-10-13 UTC
 
 ## 수집 상태
-- 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) (Microsoft, 재확인), Microsoft Security Blog 검색 페이지
-- 페치 차단: socprime[.]com (2건 시도, 전부 DNS 조회 실패), hendryadrian[.]com (DNS 조회 실패)
-- seed: 0 / 신규 검증: 0 / 미검증: 0 신규 (기존 11개 해시·3개 인프라 도메인은 이전 실행에서 이미 verified로 승격됨; 변동 없음)
+- 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) (Microsoft, 재확인)
+- 페치 차단: socprime[.]com, ncsc.govt.nz, thehackernews[.]com, startupdefense[.]io, secnews[.]gr, scamsandbox[.]com (전부 DNS 조회 실패)
+- seed: 0 / 신규 검증: 0 / 미검증: 0 신규 (기존 11개 해시·3개 인프라 도메인·1개 손상 사이트는 이전 실행에서 이미 verified로 승격됨; 변동 없음)
 
 ## 캠페인 개요
 변동 없음 — 전날과 동일. TerminalFix는 ClickFix 변종으로, 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 복사시켜 Windows Terminal/PowerShell에 붙여넣도록 유도한다. 이후 ZIP 다운로드 → DLL 사이드로딩 → PNG 스테가노그래피 추가 페이로드 → 레지스트리/예약 작업 지속성 → AD 정찰 → Python 기반 역방향 WebSocket 터널(`gitnow[.]dev:443`)로 이어진다. Microsoft 원본 포스트는 권한 상승·보안 통제 무력화·탈취·랜섬웨어를 "관찰하지 않음"이라고 명시하며, 이번 재확인에서도 동일하게 유지된다(포스트에 업데이트/정정 없음).
@@ -48,11 +48,12 @@
 - 신규 해시: 없음
 - 승격(seed→검증): 없음 (전부 이전 실행에서 이미 완료)
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음 — Microsoft 원본 포스트만 재확인 성공, 신규 포스트 없음. 이번 실행은 5개 고정 검색어 외에 Microsoft Security Blog 검색 페이지와 SOC Prime(socprime.com), hendryadrian.com 직접 페치를 시도했으나 socprime.com·hendryadrian.com 모두 DNS 조회 실패(프록시 차단)로 본문 확인 불가. 검색 snippet 상으로는 일반적인 ClickFix/가짜 Cloudflare Turnstile 보도와, "ClickFix smuggles payloads through [the Run dialog's 260-character limit]"라는 2026-10월 신규 변종(TheHackerNews/Secnews, VBScript+timeout.exe 프로세스 인젝션, PNG 스테가노그래피 아님)이 노출되었으나, 미끼·기술 메커니즘·최종 페이로드가 TerminalFix와 달라(Run 다이얼로그 길이 제한 악용이라는 별도 기법) 별개 캠페인으로 판단하고 편입하지 않음. Berlin/BSI/Rhysida, STAC4924/Lorem Ipsum Loader 관련 미검증 서술은 이번 실행에서도 전용 재검색을 수행하지 않았고 일반 검색 결과에도 재노출되지 않음; 기존 미검증 상태 그대로 유지(`host-iocs.md` 참조)
+- 신규 보고서: 없음 — Microsoft 원본 포스트만 재확인 성공(권한 상승·보안 통제 무력화·탈취·랜섬웨어는 여전히 "관찰된 다운스트림 행위 아님"으로 명시, 해시·도메인·호스트 IOC 전부 기존과 동일). 이번 실행에서 TerminalFix 전용 신규 기사(socprime.com, ncsc.govt.nz, thehackernews.com, startupdefense.io, secnews.gr, scamsandbox.com)에 대한 6건의 직접 페치를 추가 시도했으나 전부 DNS 조회 실패(프록시 차단)로 본문 확인 불가. 검색 snippet 상으로는 일반적인 ClickFix/가짜 Cloudflare Turnstile 보도(Varonis, TechRadar, CSO Online, GBHackers, StartupDefense, NCSC New Zealand)와, 2026-10월 신규 변종 "ClickFix smuggles payloads through [the Run dialog's ~260-character limit]"(TheHackerNews/Secnews, VBScript→추가 PowerShell→`timeout.exe` 프로세스 인젝션)가 재노출되었으나, 미끼·전달 메커니즘·최종 페이로드가 TerminalFix와 달라(PNG 스테가노그래피 없음, Cloudflare Turnstile 미끼 없음, gitnow.dev 터널 없음) 별개 캠페인으로 판단, 편입하지 않음. Berlin/BSI/Rhysida, STAC4924/Lorem Ipsum Loader 관련 미검증 서술은 이번 실행에서도 전용 재검색을 수행하지 않았고 일반 검색 결과에도 재노출되지 않음; 기존 미검증 상태 그대로 유지(`host-iocs.md` 참조)
 
 ## 인접 캠페인 (참고)
-- "ClickFix smuggles payloads through" — Run 다이얼로그 260자 길이 제한을 악용해 VBScript로 추가 PowerShell을 받아오고, 최종적으로 `timeout.exe`에 인젝션하는 2026년 10월 신규 ClickFix 변종 (TheHackerNews/Secnews 보도) — TerminalFix와 무관한 별개 체인
-- 가짜 Windows Update 전체화면 + PNG 스테가노그래피 로더로 LummaC2/Rhadamanthys 전달 (Huntress/CSO Online류 보도, TerminalFix와 무관)
+- "ClickFix smuggles payloads through" — Run 다이얼로그 260자 길이 제한을 악용해 VBScript로 추가 PowerShell을 받아오고, 최종적으로 `timeout.exe`에 인젝션하는 2026년 10월 신규 ClickFix 변종 (TheHackerNews/Secnews 보도, 직접 페치는 차단됨) — TerminalFix와 무관한 별개 체인
+- NCSC New Zealand, "Compromised Websites Serving ClickFix Pages" (2026-09-02) — 손상된 WordPress 사이트를 통한 일반적인 ClickFix 전파 경보 (직접 페치 차단) — TerminalFix와 별개의 더 넓은 ClickFix 생태계 경보로 판단, 편입하지 않음
+- 가짜 Windows Update 전체화면 + PNG 스테가노그래피 로더로 LummaC2/Rhadamanthys 전달 (Huntress/CSO Online류 보도, TerminalFix와 무관 — 별도 로더가 PNG 픽셀 데이터를 사용하나 미끼와 최종 페이로드가 다름)
 - 일반적인 가짜 Cloudflare Turnstile 기반 ClickFix 보도(Stealc/Lumma/NetSupport Manager 페이로드) — TerminalFix와 별개의 더 넓은 ClickFix 생태계로 판단, 편입하지 않음
 - Berlin/BSI/Rhysida, STAC4924/Lorem Ipsum Loader 관련 미검증 서술은 이번 실행에서도 전용 재검색 수행하지 않음; 기존 미검증 상태 그대로 유지 (`host-iocs.md` 참조)
 
@@ -68,4 +69,8 @@ offlineupdater.com
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched
 - SOC Prime TerminalFix detection rules (socprime[.]com) — 날짜 미확인 — blocked
-- hendryadrian.com TerminalFix repost — 날짜 미확인 — blocked
+- NCSC New Zealand, "Compromised Websites Serving ClickFix Pages" (ncsc.govt[.]nz) — 2026-09-02 — blocked
+- TheHackerNews, "ClickFix smuggles payloads through" (thehackernews[.]com) — 2026-10 — blocked
+- StartupDefense, ClickFix fake CAPTCHA blog (startupdefense[.]io) — 날짜 미확인 — blocked
+- SecNews, "ClickFix cache smuggling payloads browser" (secnews[.]gr) — 날짜 미확인 — blocked
+- ScamSandbox, "Fake CAPTCHA Scam (2026)" (scamsandbox[.]com) — 2026 — blocked
