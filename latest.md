@@ -1,12 +1,12 @@
-# TerminalFix Snapshot — 2026-10-16 UTC
+# TerminalFix Snapshot — 2026-10-17 UTC
 
 ## 수집 상태
 - 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) (Microsoft, 재확인)
-- 페치 차단: sophos[.]com (it-it/en-us/blog 경로 3회 전부 DNS 실패), socprime[.]com, hendryadrian[.]com, europeanpurpose[.]com, securityarsenal[.]com, radar.offseq[.]com (전부 DNS 조회/프록시 실패)
+- 페치 차단: gbhackers[.]com, csoonline[.]com, ncsc.govt[.]nz (전부 DNS 조회 실패)
 - seed: 0 / 신규 검증: 0 / 미검증: 0 신규 IOC (기존 11개 해시·3개 인프라 도메인·1개 손상 사이트는 전부 이전 실행에서 이미 verified; 변동 없음)
 
 ## 캠페인 개요
-변동 없음 — 전날과 동일. TerminalFix는 ClickFix 변종으로, 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 복사시켜 Windows Terminal/PowerShell에 붙여넣도록 유도한다. 이후 ZIP 다운로드 → DLL 사이드로딩 → PNG 스테가노그래피 추가 페이로드 → 레지스트리/예약 작업 지속성 → AD 정찰 → Python 기반 역방향 WebSocket 터널(`gitnow[.]dev:443`)로 이어진다. Microsoft 원본 포스트를 이번 실행에서도 재확인했으며, 권한 상승·보안 통제 무력화·탈취·랜섬웨어를 "관찰하지 않음"이라는 서술과 해시·도메인·호스트 IOC는 전부 기존과 동일하다. 이번 실행에서는 Sophos("Lorem Ipsum Loader"/STAC4924/GOLD VICTOR 귀속 출처)에 대해 경로를 바꿔 재시도(it-it, en-us, en-us/blog)했으나 세 번 모두 DNS 조회 실패로 여전히 미검증이다.
+변동 없음 — 전날과 동일. TerminalFix는 ClickFix 변종으로, 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 복사시켜 Windows Terminal/PowerShell에 붙여넣도록 유도한다. 이후 ZIP 다운로드 → DLL 사이드로딩 → PNG 스테가노그래피 추가 페이로드 → 레지스트리/예약 작업 지속성 → AD 정찰 → Python 기반 역방향 WebSocket 터널(`gitnow[.]dev:443`)로 이어진다. Microsoft 원본 포스트를 이번 실행에서도 재확인했으며, 권한 상승·보안 통제 무력화·탈취·랜섬웨어를 "관찰하지 않음"이라는 서술과 해시·도메인·호스트 IOC는 전부 기존과 동일하다. 이번 실행에서 새로 시도한 gbhackers[.]com, csoonline[.]com, ncsc.govt[.]nz 세 곳은 모두 DNS 차단되어 TerminalFix 관련 신규 세부사항을 확인하지 못했다.
 
 ## 공격 체인
 1. 가짜 CAPTCHA 유도 — 손상된 정상 사이트(`linked-log[.]com`)에 가짜 Cloudflare Turnstile 오버레이를 띄워 "I am not a robot" 검증을 가장, PowerShell 명령을 클립보드에 몰래 복사
@@ -48,14 +48,13 @@
 - 신규 해시: 없음
 - 승격(seed→검증): 없음
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음 (Microsoft 원문 재확인 외 TerminalFix 특정 신규 세부사항 없음; sophos.com/socprime.com/hendryadrian.com/europeanpurpose.com/securityarsenal.com/radar.offseq.com 페치 전부 DNS/프록시 차단)
+- 신규 보고서: 없음 (Microsoft 원문 재확인 외 TerminalFix 특정 신규 세부사항 없음; gbhackers.com/csoonline.com/ncsc.govt.nz 페치 전부 DNS 차단)
 
 ## 인접 캠페인 (참고)
-- Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속 — 여전히 미검증, 이번 실행에서도 sophos.com 접근 3회 모두 실패 (`host-iocs.md` 2026-10-14 항목 참조)
-- SOC Prime(2026-10-05 추정)의 랜섬웨어·Impacket·Certipy 리스크 주장 — 여전히 미검증·Microsoft 원문과 상충 (`host-iocs.md` 참조)
-- "ClickFix smuggles payloads through" — Run 다이얼로그 260자 길이 제한을 악용한 2026년 10월 ClickFix 변종 — TerminalFix와 무관한 별개 체인
-- 가짜 Windows Update 전체화면 + PNG 스테가노그래피 로더로 LummaC2/Rhadamanthys 전달 — TerminalFix와 무관한 별도 체인
-- Berlin/BSI/Rhysida 랜섬웨어 서술 — 미검증 상태 그대로 유지, 이번 실행 전용 재검색 없음 (`host-iocs.md` 참조)
+- gbhackers[.]com (2026-09-06), Varonis, StartupDefense 등의 일반 ClickFix/가짜 Cloudflare Turnstile 설명 글 — TerminalFix와 무관한 보다 넓은 ClickFix 생태계 활동으로, 인포스틸러(Lumma, Stealc)·NetSupport RAT 전달이 주된 목적
+- NZ NCSC(2026-09-02 추정), "손상된 웹사이트가 ClickFix 페이지를 서빙" 경보 — 손상된 WordPress 사이트를 통한 일반 ClickFix 전달을 다룸, TerminalFix 특정 언급 없음(페치 차단으로 미확인)
+- Huntress/BleepingComputer의 가짜 Windows Update 전체화면 + PNG 스테가노그래피 로더로 LummaC2/Rhadamanthys 전달 — TerminalFix와 무관한 별도 체인(기존 동일 항목)
+- Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속, SOC Prime의 랜섬웨어·Impacket·Certipy 리스크 주장, Berlin/BSI/Rhysida 랜섬웨어 서술 — 모두 이전 실행과 동일하게 미검증 상태 유지, 이번 실행 전용 재검색 없음 (`host-iocs.md` 참조)
 
 ## 차단 운영 포맷 (복붙용)
 
@@ -68,9 +67,6 @@ offlineupdater.com
 
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched
-- Sophos, "TerminalFix and Lorem Ipsum loader enable covert tunneling" (sophos[.]com) — 날짜 미상 — blocked (3회 시도)
-- SOC Prime, "TerminalFix campaign builds reverse tunnels for persistent access" (socprime[.]com) — 2026-10-05 추정 — blocked
-- HendryAdrian mirror, "Microsoft warns of TerminalFix attacks deploying reverse tunnels" (hendryadrian[.]com) — 날짜 미상 — blocked
-- EuropeanPurpose, "TerminalFix Exploits Fake CAPTCHAs for Cyber Intrusion" (europeanpurpose[.]com) — 날짜 미상 — blocked
-- SecurityArsenal, "TerminalFix ClickFix Variant... Detection and Defense Guide" (securityarsenal[.]com) — 날짜 미상 — blocked
-- OffSeq Radar, "TerminalFix campaign deploys a reverse tunnel through multistage intrusion" (radar.offseq[.]com) — 날짜 미상 — blocked
+- GBHackers, "ClickFix Attack Uses Fake Cloudflare Verification" (gbhackers[.]com) — 2026-09-06 — blocked
+- CSO Online, "New phishing campaign hijacks clipboard via fake CAPTCHA for malware delivery" (csoonline[.]com) — 날짜 미상 — blocked
+- NZ NCSC, "Compromised Websites Serving ClickFix Pages" (ncsc.govt[.]nz) — 2026-09-02 추정 — blocked
