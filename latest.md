@@ -1,12 +1,12 @@
-# TerminalFix Snapshot — 2026-10-21 UTC
+# TerminalFix Snapshot — 2026-10-22 UTC
 
 ## 수집 상태
-- 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion) (Microsoft, 재확인)
-- 페치 차단: redmondmag.com, blog.gridinsoft.com, hivepro.com, socprime.com, csoonline.com, techradar.com, borncity.com (전부 DNS 조회 실패)
+- 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) (Microsoft, 재확인)
+- 페치 차단: socprime.com, gbhackers.com, www.mishcon.com (전부 DNS 조회 실패)
 - seed: 0 / 신규 검증: 0 / 미검증: 0 (기존 11개 해시·3개 인프라 도메인·1개 손상 사이트는 전부 이전 실행에서 이미 verified; 변동 없음)
 
 ## 캠페인 개요
-변동 없음 — 전날과 동일. TerminalFix는 ClickFix 변종으로, 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 복사시켜 Windows Terminal/PowerShell에 붙여넣도록 유도한다. 이후 ZIP 다운로드 → DLL 사이드로딩 → PNG 스테가노그래피 추가 페이로드 → 레지스트리/예약 작업 지속성(`LockScreenContentServer_MuODG5yBM`) → AD 정찰 → Python 기반 역방향 WebSocket 터널(`gitnow[.]dev:443`)로 이어진다. Microsoft 원본 포스트를 이번 실행에서도 재확인했으며, 공격 체인·IOC(해시 11개, 도메인 4개)·"관찰하지 않음" 서술이 전부 기존과 동일하다. SOC Prime의 탐지 룰 페이지(2026-10-05일자, 페치 차단)가 검색에 노출되어 기존 체인 설명과 "Vice Spider" 귀속(= Rhysida의 다른 명칭, 2026-09-19부터 이미 기록된 Berlin/BSI/Rhysida 서술의 일부)을 반복했을 뿐 신규 사실은 없다. 이번 실행에서 시도한 2차 보도 7건(redmondmag.com, blog.gridinsoft.com, hivepro.com, socprime.com, csoonline.com, techradar.com, borncity.com) 전부 DNS 차단되어 신규 세부사항을 확인하지 못했다.
+변동 없음 — 전날과 동일. TerminalFix는 ClickFix 변종으로, 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 복사시켜 Windows Terminal/PowerShell에 붙여넣도록 유도한다. 이후 ZIP 다운로드 → DLL 사이드로딩 → PNG 스테가노그래피 추가 페이로드 → 레지스트리/예약 작업 지속성(`LockScreenContentServer_MuODG5yBM`) → AD 정찰 → Python 기반 역방향 WebSocket 터널(`gitnow[.]dev:443`)로 이어진다. Microsoft 원본 포스트를 이번 실행에서도 재확인했으며, 공격 체인·IOC(해시 11개, 도메인 4개)·"관찰하지 않음" 서술이 전부 기존과 동일하다. 이번 실행에서 시도한 신규 2차 보도 3건(SOC Prime, GBHackers, Mishcon de Reya) 전부 DNS 차단되어 신규 세부사항을 확인하지 못했다.
 
 ## 공격 체인
 1. 가짜 CAPTCHA 유도 — 손상된 정상 사이트(`linked-log[.]com`)에 가짜 Cloudflare Turnstile 오버레이를 띄워 "I am not a robot" 검증을 가장, PowerShell 명령을 클립보드에 몰래 복사
@@ -48,12 +48,12 @@
 - 신규 해시: 없음
 - 승격(seed→검증): 없음
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음 (Microsoft 원문 재확인 외 TerminalFix 특정 신규 세부사항 없음; 2차 보도 7건 전부 DNS 차단; SOC Prime 탐지 룰 페이지는 기존 서술 반복)
+- 신규 보고서: 없음 (Microsoft 원문 재확인 외 TerminalFix 특정 신규 세부사항 없음; 신규 2차 보도 3건 전부 DNS 차단)
 
 ## 인접 캠페인 (참고)
-- Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(2026-10-14 최초 포착), SOC Prime의 랜섬웨어·Impacket·Certipy 리스크 주장, Berlin/BSI/Rhysida("Vice Spider") 랜섬웨어 서술 — 모두 이전 실행과 동일하게 미검증 상태 유지
+- Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속, SOC Prime의 랜섬웨어·Impacket·Certipy 리스크 주장, Berlin/BSI/Rhysida("Vice Spider") 랜섬웨어 서술 — 모두 이전 실행과 동일하게 미검증 상태 유지
 - Huntress "ClickFix Gets Creative: Malware Buried in Images" — 가짜 Windows Update 전체화면 + PNG 스테가노그래피 .NET 로더로 LummaC2/Rhadamanthys 전달 — TerminalFix와 무관한 별도 체인(기존 동일 항목)
-- NZ NCSC "Compromised Websites Serving ClickFix Pages" 및 Varonis/StartupDefense ClickFix 설명 글 — 일반 ClickFix 생태계 활동, TerminalFix와 무관
+- CSO Online "New phishing campaign hijacks clipboard via fake CAPTCHA for malware delivery" (SlashNext 기반, Lumma/Stealc/NetSupport Manager 페이로드) — 일반 ClickFix 생태계 활동, TerminalFix 고유 IOC 언급 없음
 
 ## 차단 운영 포맷 (복붙용)
 
@@ -65,11 +65,7 @@ offlineupdater.com
 ```
 
 ## 출처
-- [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion) — 2026-08-28 — fetched
-- Redmondmag, "Microsoft Warns TerminalFix Turns Fake CAPTCHA Checks Into Network Access" (redmondmag.com) — 2026-09-02 — blocked
-- GridinSoft, "TerminalFix Turns Fake CAPTCHA Into a Network Tunnel" (blog.gridinsoft.com) — 날짜 미상 — blocked
-- HivePro, "TerminalFix: Fake Cloudflare Checks Open a Reverse Tunnel" (hivepro.com) — 날짜 미상 — blocked
-- SOC Prime, "Detection of Malicious PowerShell Commands for ZIP and PNG Retrieval" (socprime.com) — 2026-10-05 — blocked
-- CSO Online (csoonline.com) — 날짜 미상 — blocked
-- TechRadar Pro (techradar.com) — 날짜 미상 — blocked
-- BornCity (borncity.com) — 날짜 미상 — blocked
+- [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched
+- SOC Prime, "TerminalFix Campaign Builds Reverse Tunnels for Persistent Access" (socprime.com) — 날짜 미상 — blocked
+- GBHackers, "ClickFix Attack Uses Fake Cloudflare Verification" (gbhackers.com) — 2026-09-06 — blocked
+- Mishcon de Reya, "From Clipboard to Compromise: Steganographic Techniques Observed in ClickFix Campaign" (mishcon.com) — 날짜 미상 — blocked
