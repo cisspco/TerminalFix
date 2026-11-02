@@ -1,12 +1,12 @@
-# TerminalFix Snapshot — 2026-10-25 UTC
+# TerminalFix Snapshot — 2026-11-02 UTC
 
 ## 수집 상태
 - 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/)
-- 페치 차단: socprime[.]com, ncsc.govt[.]nz, gadgetreview[.]com, varonis[.]com
-- seed: 11 / 신규 검증: 0 / 미검증: 0 (신규 미검증 후보 없음; 기존 표류 항목 2건 유지)
+- 페치 차단: techradar[.]com, socprime[.]com, mishcon[.]com, gbhackers[.]com, startupdefense[.]io
+- seed: 4 (인프라 3 + 손상 사이트 1) / 검증: 11 (해시) / 신규 검증: 0 / 미검증: 0
 
 ## 캠페인 개요
-변동 없음. 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 심고, 이를 Windows Terminal/PowerShell에 붙여넣도록 유도하는 ClickFix 계열 캠페인. ZIP 다운로드 → DLL 사이드로딩(`LockScreenContentServer.exe` + `dui70.dll`) → PNG 스테가노그래피 2차 페이로드 → 지속성(Run 키 + 예약 작업) → 내부 정찰 → 비동기 명령 루프 → `gitnow[.]dev`로의 TLS/WebSocket 역방향 터널로 이어짐. Microsoft는 분석한 체인에서 권한 상승·보안 통제 변조·탈취·랜섬웨어 배포를 관찰하지 못했다고 명시.
+변동 없음. 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 심고, 이를 Windows Terminal/PowerShell에 붙여넣도록 유도하는 ClickFix 계열 캠페인. ZIP 다운로드 → DLL 사이드로딩(`LockScreenContentServer.exe` + `dui70.dll`) → PNG 스테가노그래피 2차 페이로드 → 지속성(Run 키 + 예약 작업) → 내부 정찰 → 비동기 명령 루프 → `gitnow[.]dev`로의 TLS/WebSocket 역방향 터널로 이어짐. Microsoft 원본 블로그를 이번 실행에서 재확인했으며, 신규 IOC나 변경 사항은 없음. 권한 상승·보안 통제 변조·탈취·랜섬웨어 배포는 계속 미관찰로 명시됨.
 
 ## 공격 체인
 1. 가짜 CAPTCHA 유도 — 손상된 정상 사이트(`linked-log[.]com`)에 가짜 Cloudflare Turnstile 화면이 뜨고, 체크박스 클릭 시 악성 PowerShell 명령이 클립보드에 복사됨 (T1204.004)
@@ -48,16 +48,16 @@
 - 신규 해시: 없음
 - 승격(seed→검증): 없음
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음 (Microsoft 원본 블로그 재확인 성공, 모든 IOC·호스트 체인 변동 없이 재확인됨)
+- 신규 보고서: 없음 (Microsoft 원본 블로그 재확인 성공 — IOC 테이블·행위 변동 없음; 다른 모든 후보 URL은 이번 실행에서 차단됨)
 
 ## 인접 캠페인 (참고)
-- 2026-10-14부터 표류 중인 Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(미검증) — sophos[.]com 재시도 없음, 이번 실행에서도 재확인 불가 상태 유지
+- 2026-10월 The Hacker News/Mishcon 보도 "ClickFix smuggles payloads through [cached PNG]" — 브라우저 캐시에 PNG로 위장한 스크립트를 미리 적재하고 VBScript로 실행하는 별도 기법(RGBA 픽셀 스테가노그래피가 아님). TerminalFix와 무관한 별도 ClickFix 변종으로 분류, 이번 실행에서도 재확인 불가(mishcon[.]com 차단)
+- gbhackers.com 2026-09-06 "ClickFix attack uses fake Cloudflare verification" — 일반 ClickFix/가짜 Turnstile 설명, TerminalFix와의 연관 확인 불가(이번 실행에서 fetch 차단)
+- startupdefense.io "ClickFix attacks fake CAPTCHA startups" — 일반 ClickFix 배경 자료로 추정, 이번 실행에서 fetch 차단으로 확인 불가
+- SOC Prime TerminalFix 탐지 룰 다국어 페이지(socprime[.]com) — Microsoft 원본 요약, 신규 정보 없음(추정) — 이번 실행에서도 fetch 차단
+- techradar.com 가짜 Cloudflare CAPTCHA 기사 — TerminalFix와의 연관 여부 미확인(이번 실행에서 fetch 차단)
+- 2026-10-14부터 표류 중인 Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(미검증) — 이번 실행에서도 재확인 불가 상태 유지
 - Berlin/BSI/Rhysida 랜섬웨어 내러티브(미검증, 2026-09-16부터 연속 미확인) — 이번 실행에서 별도 검색 없음, 상태 변동 없음
-- mishcon[.]com "From clipboard to compromise: steganographic techniques observed in ClickFix campaign" — 이번 실행에서는 재검색되지 않음, TerminalFix와의 연관성 계속 미확인 — 별도 PNG 스테가노그래피 ClickFix 변종으로 추정
-- NZ NCSC "Compromised Websites Serving ClickFix Pages" (2026-09-02) — 손상된 WordPress 사이트를 통한 일반 ClickFix 전달 설명, TerminalFix 특정 언급 없음, 이번 실행에서도 fetch 차단
-- SOC Prime TerminalFix 탐지 룰 다국어 페이지(socprime[.]com) — Microsoft 원본 요약, 신규 정보 없음(추정) — fetch 차단으로 확인 불가
-- Windows Update 가짜 화면 + .NET 스테가노그래피 로더(LummaC2/Rhadamanthys) — 별도의 무관한 ClickFix 변종으로 계속 분류
-- Varonis "Decoding 'ClickFix'" 일반 설명 글 — TerminalFix 특정 언급 여부 미확인(fetch 차단), 일반 ClickFix 배경 자료로 추정
 
 ## 차단 운영 포맷 (복붙용)
 
@@ -70,7 +70,8 @@ offlineupdater.com
 
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인, 변동 없음)
+- TechRadar 가짜 Cloudflare CAPTCHA 기사 (techradar[.]com) — 날짜 미확인 — blocked
 - SOC Prime TerminalFix write-up (socprime[.]com) — 2026-08-31(추정) — blocked
-- Compromised Websites Serving ClickFix Pages (ncsc.govt[.]nz) — 2026-09-02 — blocked
-- Decoding 'ClickFix': Lessons from the Latest Browser-Based Phish (varonis[.]com) — 날짜 미확인 — blocked
-- gadgetreview[.]com 기사 — 날짜/연관성 미확인 — blocked
+- Mishcon "Picture this: ClickFix hides malware in an image" (mishcon[.]com) — 2026-10(추정) — blocked
+- GBHackers "ClickFix attack uses fake Cloudflare verification" (gbhackers[.]com) — 2026-09-06 — blocked
+- Startup Defense "ClickFix attacks: fake CAPTCHA startups" (startupdefense[.]io) — 날짜 미확인 — blocked
