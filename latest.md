@@ -1,8 +1,8 @@
-# TerminalFix Snapshot — 2026-11-02 UTC
+# TerminalFix Snapshot — 2026-11-03 UTC
 
 ## 수집 상태
 - 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/)
-- 페치 차단: techradar[.]com, socprime[.]com, mishcon[.]com, gbhackers[.]com, startupdefense[.]io
+- 페치 차단: malwarebytes[.]com, thehackernews[.]com, csoonline[.]com, blog.gridinsoft[.]com, techradar[.]com, rhisac[.]org, radar.offseq[.]com
 - seed: 4 (인프라 3 + 손상 사이트 1) / 검증: 11 (해시) / 신규 검증: 0 / 미검증: 0
 
 ## 캠페인 개요
@@ -41,23 +41,20 @@
 - ededeacf30e493dd632d477fe770ba419aa2848f685ea049381a0a8d2cc3e84d — 악성 dui70.dll — verified
 
 ## 호스트 IOC · 행위
-전날과 동일 (변동 없음). 상세는 `host-iocs.md` 참조: ProgramData 16진수 스테이징 폴더, `1.bat`, `LockScreenContentServer.exe`/`dui70.dll` 사이드로딩, HKCU Run 키 및 예약 작업(`LockScreenContentServer_MuODG5yBM`), 다국어 정찰 스크립트, `client.py` 역방향 터널(7바이트 프레이밍, User-Agent 로테이션, `MSG_SHUTDOWN`).
+전날과 동일 (변동 없음). 상세는 `host-iocs.md` 참조: ProgramData 16진수 스테이징 폴더, `1.bat`, `LockScreenContentServer.exe`/`dui70.dll` 사이드로딩, HKCU Run 키 및 예약 작업(`LockScreenContentServer_MuODG5yBM`), 다국어(영/스페인/독) 정찰 스크립트, `client.py` 역방향 터널(7바이트 프레이밍, User-Agent 로테이션, `MSG_SHUTDOWN`).
 
 ## 이번 실행 변경사항
 - 신규 인프라: 없음
 - 신규 해시: 없음
 - 승격(seed→검증): 없음
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음 (Microsoft 원본 블로그 재확인 성공 — IOC 테이블·행위 변동 없음; 다른 모든 후보 URL은 이번 실행에서 차단됨)
+- 신규 보고서: 없음 (Microsoft 원본 블로그 재확인 성공 — IOC 테이블·행위 변동 없음; SOC Prime/BleepingComputer 재게재 기사 다수 검색 결과에 노출되었으나 신규 정보 없음; 다른 모든 후보 URL은 이번 실행에서 차단됨)
 
 ## 인접 캠페인 (참고)
-- 2026-10월 The Hacker News/Mishcon 보도 "ClickFix smuggles payloads through [cached PNG]" — 브라우저 캐시에 PNG로 위장한 스크립트를 미리 적재하고 VBScript로 실행하는 별도 기법(RGBA 픽셀 스테가노그래피가 아님). TerminalFix와 무관한 별도 ClickFix 변종으로 분류, 이번 실행에서도 재확인 불가(mishcon[.]com 차단)
-- gbhackers.com 2026-09-06 "ClickFix attack uses fake Cloudflare verification" — 일반 ClickFix/가짜 Turnstile 설명, TerminalFix와의 연관 확인 불가(이번 실행에서 fetch 차단)
-- startupdefense.io "ClickFix attacks fake CAPTCHA startups" — 일반 ClickFix 배경 자료로 추정, 이번 실행에서 fetch 차단으로 확인 불가
-- SOC Prime TerminalFix 탐지 룰 다국어 페이지(socprime[.]com) — Microsoft 원본 요약, 신규 정보 없음(추정) — 이번 실행에서도 fetch 차단
-- techradar.com 가짜 Cloudflare CAPTCHA 기사 — TerminalFix와의 연관 여부 미확인(이번 실행에서 fetch 차단)
-- 2026-10-14부터 표류 중인 Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(미검증) — 이번 실행에서도 재확인 불가 상태 유지
 - Berlin/BSI/Rhysida 랜섬웨어 내러티브(미검증, 2026-09-16부터 연속 미확인) — 이번 실행에서 별도 검색 없음, 상태 변동 없음
+- Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(미검증, 2026-10-14부터 표류 중) — 이번 실행에서도 재확인 불가 상태 유지
+- Huntress/Mishcon/BleepingComputer 보도의 가짜 Windows Update 전체화면 유도 + PNG 스테가노그래피 변종(LummaC2/Rhadamanthys 페이로드) — TerminalFix와 다른 루어·페이로드로 별도 캠페인 분류, 변동 없음
+- TheHackerNews 2026-10월 "ClickFix smuggles payloads through [cached PNG]" — 브라우저 캐시 PNG 위장 + VBScript 실행 기법, RGBA 픽셀 스테가노그래피 아님, TerminalFix와 무관한 별도 변종으로 분류 유지
 
 ## 차단 운영 포맷 (복붙용)
 
@@ -70,8 +67,10 @@ offlineupdater.com
 
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인, 변동 없음)
-- TechRadar 가짜 Cloudflare CAPTCHA 기사 (techradar[.]com) — 날짜 미확인 — blocked
-- SOC Prime TerminalFix write-up (socprime[.]com) — 2026-08-31(추정) — blocked
-- Mishcon "Picture this: ClickFix hides malware in an image" (mishcon[.]com) — 2026-10(추정) — blocked
-- GBHackers "ClickFix attack uses fake Cloudflare verification" (gbhackers[.]com) — 2026-09-06 — blocked
-- Startup Defense "ClickFix attacks: fake CAPTCHA startups" (startupdefense[.]io) — 날짜 미확인 — blocked
+- Malwarebytes "TerminalFix looks like ClickFix, but delivers a very different payload" (malwarebytes[.]com) — 2026-09 — blocked
+- The Hacker News "TerminalFix uses fake Cloudflare..." (thehackernews[.]com) — 2026-08 — blocked
+- CSO Online "Fake Cloudflare CAPTCHA tricks victims into opening a tunnel for attackers" (csoonline[.]com) — 날짜 미확인 — blocked
+- GridinSoft "TerminalFix Turns Fake CAPTCHA Into a Network Tunnel" (blog.gridinsoft[.]com) — 날짜 미확인 — blocked
+- TechRadar "New ClickFix campaign can deploy powerful multi-stage malware..." (techradar[.]com) — 날짜 미확인 — blocked
+- RH-ISAC "TerminalFix Campaign Targets Multiple Critical Sectors with ClickFix Variant" (rhisac[.]org) — 날짜 미확인 — blocked
+- OffSeq Radar "TerminalFix campaign deploys a reverse tunnel through multistage intrusion" (radar.offseq[.]com) — 날짜 미확인 — blocked
