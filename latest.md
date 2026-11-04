@@ -1,9 +1,9 @@
-# TerminalFix Snapshot — 2026-11-03 UTC
+# TerminalFix Snapshot — 2026-11-04 UTC
 
 ## 수집 상태
 - 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/)
-- 페치 차단: malwarebytes[.]com, thehackernews[.]com, csoonline[.]com, blog.gridinsoft[.]com, techradar[.]com, rhisac[.]org, radar.offseq[.]com
-- seed: 4 (인프라 3 + 손상 사이트 1) / 검증: 11 (해시) / 신규 검증: 0 / 미검증: 0
+- 페치 차단: socprime[.]com, rhisac[.]org, darkreading[.]com
+- seed: 4 (인프라 3 + 손상 사이트 1) / 신규 검증: 0 / 미검증: 0 (신규 없음)
 
 ## 캠페인 개요
 변동 없음. 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 심고, 이를 Windows Terminal/PowerShell에 붙여넣도록 유도하는 ClickFix 계열 캠페인. ZIP 다운로드 → DLL 사이드로딩(`LockScreenContentServer.exe` + `dui70.dll`) → PNG 스테가노그래피 2차 페이로드 → 지속성(Run 키 + 예약 작업) → 내부 정찰 → 비동기 명령 루프 → `gitnow[.]dev`로의 TLS/WebSocket 역방향 터널로 이어짐. Microsoft 원본 블로그를 이번 실행에서 재확인했으며, 신규 IOC나 변경 사항은 없음. 권한 상승·보안 통제 변조·탈취·랜섬웨어 배포는 계속 미관찰로 명시됨.
@@ -13,18 +13,18 @@
 2. 초기 페이로드 실행 — 클립보드 명령이 ZIP(`verify_pkg.zip`)을 다운로드해 `C:\ProgramData\<16-hex>\`에 압축 해제 후 `1.bat` 실행
 3. DLL 사이드로딩 — 정상 서명된 `LockScreenContentServer.exe`가 같은 디렉터리의 악성 `dui70.dll`을 로드 (정상 위치는 `C:\Windows\SystemApps`)
 4. 스테가노그래피 페이로드 — 3개 PNG 이미지의 RGBA 픽셀 데이터에서 후속 실행 파일/DLL을 재조립
-5. 지속성 — HKCU Run 키 및 약 60분 주기 예약 작업이 `LockScreenContentServer.exe`를 재실행; 페이로드 폴더는 숨김+시스템 속성
-6. 내부 정찰 — `nltest`, `net group`, ADSI 질의(도메인 트러스트, Domain Admins, AD 사용자/컴퓨터), 내부 서버 핑 스윕
+5. 지속성 — HKCU Run 키 및 약 60분 주기 예약 작업(`LockScreenContentServer_MuODG5yBM`)이 `LockScreenContentServer.exe`를 재실행; 페이로드 폴더는 숨김+시스템 속성
+6. 내부 정찰 — `nltest`, `net group`, ADSI 질의(도메인 트러스트, Domain Admins, AD 사용자/컴퓨터), 내부 서버 핑 스윕 (영/스페인/독 다국어 변형)
 7. 비동기 명령 실행 — PowerShell 파일감시 루프가 텍스트 파일의 명령을 `Invoke-Expression`으로 실행하고 결과를 다른 파일에 기록
 8. 역방향 터널 — 내장형 Python 3.14.5 런타임의 `pythonw.exe`가 `client.py`(`--server`, `--uuid`, `cert.pem`)를 실행, `gitnow[.]dev:443`로 TLS/WebSocket 연결하여 내부 IPv4/IPv6/호스트명으로 임의 TCP 중계
 
 ## 공격자 인프라 (차단 대상) (3)
-- gitnow[.]dev — 역방향 터널 C2, TCP/443 — seed
-- bestsocialmedianewspapper[.]com — 스테가노그래피 페이로드 전달(PNG RGBA 임베딩) — seed
-- offlineupdater[.]com — 페이로드 전달 failover — seed
+- gitnow[.]dev — 역방향 터널 C2, TCP/443 — seed | verified
+- bestsocialmedianewspapper[.]com — 스테가노그래피 페이로드 전달(PNG RGBA 임베딩) — seed | verified
+- offlineupdater[.]com — 페이로드 전달 failover — seed | verified
 
 ## 손상된 정상 사이트 (차단 금지, 모니터링만) (1)
-- linked-log[.]com — 가짜 Cloudflare Turnstile CAPTCHA 호스팅, 피해자 사이트 — seed
+- linked-log[.]com — 가짜 Cloudflare Turnstile CAPTCHA 호스팅, 피해자 사이트 — seed | verified
 
 ## 파일 해시 (11)
 ### SHA-256
@@ -46,15 +46,15 @@
 ## 이번 실행 변경사항
 - 신규 인프라: 없음
 - 신규 해시: 없음
-- 승격(seed→검증): 없음
+- 승격(seed→검증): 없음 (모든 seed 항목이 이전 실행들에서 이미 검증됨; 이번 실행도 재확인만 수행)
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음 (Microsoft 원본 블로그 재확인 성공 — IOC 테이블·행위 변동 없음; SOC Prime/BleepingComputer 재게재 기사 다수 검색 결과에 노출되었으나 신규 정보 없음; 다른 모든 후보 URL은 이번 실행에서 차단됨)
+- 신규 보고서: 없음 (Microsoft 원본 블로그 재확인 성공 — IOC 테이블·행위 변동 없음; SOC Prime의 2026-10-05 "network pivoting" 후속 글과 Vice Spider 귀속은 2026-10-21 실행에서 이미 로그됨, 이번 실행에서 재노출만 확인; socprime.com, rhisac.org, darkreading.com 직접 페치는 모두 차단됨)
 
 ## 인접 캠페인 (참고)
 - Berlin/BSI/Rhysida 랜섬웨어 내러티브(미검증, 2026-09-16부터 연속 미확인) — 이번 실행에서 별도 검색 없음, 상태 변동 없음
 - Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(미검증, 2026-10-14부터 표류 중) — 이번 실행에서도 재확인 불가 상태 유지
+- SOC Prime의 "Vice Spider" 귀속 및 네트워크 피벗을 통한 "잠재적 랜섬웨어 배포" 위험 평가(미검증, 2026-10-14/21부터 표류 중) — Microsoft의 "미관찰" 명시와 상충되는 2차 보고의 위험 평가일 뿐, 이번 실행에서도 직접 페치 불가로 재확인 불가
 - Huntress/Mishcon/BleepingComputer 보도의 가짜 Windows Update 전체화면 유도 + PNG 스테가노그래피 변종(LummaC2/Rhadamanthys 페이로드) — TerminalFix와 다른 루어·페이로드로 별도 캠페인 분류, 변동 없음
-- TheHackerNews 2026-10월 "ClickFix smuggles payloads through [cached PNG]" — 브라우저 캐시 PNG 위장 + VBScript 실행 기법, RGBA 픽셀 스테가노그래피 아님, TerminalFix와 무관한 별도 변종으로 분류 유지
 
 ## 차단 운영 포맷 (복붙용)
 
@@ -67,10 +67,6 @@ offlineupdater.com
 
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인, 변동 없음)
-- Malwarebytes "TerminalFix looks like ClickFix, but delivers a very different payload" (malwarebytes[.]com) — 2026-09 — blocked
-- The Hacker News "TerminalFix uses fake Cloudflare..." (thehackernews[.]com) — 2026-08 — blocked
-- CSO Online "Fake Cloudflare CAPTCHA tricks victims into opening a tunnel for attackers" (csoonline[.]com) — 날짜 미확인 — blocked
-- GridinSoft "TerminalFix Turns Fake CAPTCHA Into a Network Tunnel" (blog.gridinsoft[.]com) — 날짜 미확인 — blocked
-- TechRadar "New ClickFix campaign can deploy powerful multi-stage malware..." (techradar[.]com) — 날짜 미확인 — blocked
-- RH-ISAC "TerminalFix Campaign Targets Multiple Critical Sectors with ClickFix Variant" (rhisac[.]org) — 날짜 미확인 — blocked
-- OffSeq Radar "TerminalFix campaign deploys a reverse tunnel through multistage intrusion" (radar.offseq[.]com) — 날짜 미확인 — blocked
+- SOC Prime "TerminalFix campaign enables network pivoting through compromised hosts" (socprime[.]com) — 2026-10-05 — blocked
+- RH-ISAC "TerminalFix Campaign Targets Multiple Critical Sectors with ClickFix Variant" (rhisac[.]org) — 2026-09-01 — blocked
+- Dark Reading "'TerminalFix' Campaign Uses PowerShell for Enterprise Attacks" (darkreading[.]com) — 날짜 미확인 — blocked
