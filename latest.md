@@ -1,8 +1,8 @@
-# TerminalFix Snapshot — 2026-11-06 UTC
+# TerminalFix Snapshot — 2026-11-07 UTC
 
 ## 수집 상태
 - 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/)
-- 페치 차단: malwarebytes[.]com, blog.gridinsoft[.]com, socprime[.]com, anavem[.]com, cybersecurity360[.]it, europeanpurpose[.]com, hendryadrian[.]com
+- 페치 차단: csoonline[.]com, scworld[.]com, blog.gridinsoft[.]com, techradar[.]com, socprime[.]com
 - seed: 4 (인프라 3 + 손상 사이트 1) / 신규 검증: 0 / 미검증: 0 (신규 인프라/해시 없음)
 
 ## 캠페인 개요
@@ -48,14 +48,14 @@
 - 신규 해시: 없음
 - 승격(seed→검증): 없음 (모든 seed 항목이 이전 실행들에서 이미 검증됨; 이번 실행도 재확인만 수행)
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음. Microsoft 원본 블로그 재확인 성공 — 공격 체인·IOC 테이블·"다운스트림 행위 미관찰" 서술 모두 변동 없음. Malwarebytes, GridinSoft, SOC Prime, Anavem, Cybersecurity360.it, EuropeanPurpose, HendryAdrian 직접 페치는 모두 차단됨(DNS/프록시)
+- 신규 보고서: 없음. Microsoft 원본 블로그 재확인 성공 — 공격 체인·IOC 테이블·"다운스트림 행위 미관찰" 서술 모두 변동 없음. CSO Online, SC World, GridinSoft, TechRadar, SOC Prime 직접 페치는 모두 차단됨(DNS/프록시) — CSO Online과 SC World는 이번 실행에서 처음 시도했으나 역시 차단됨
 
 ## 인접 캠페인 (참고)
-- Microsoft가 2026년 2월경부터 추적한 별도의 Windows Terminal 악용 ClickFix 캠페인(TechRadar/VPNCentral, 2026-11-05부터 기록) — 가짜 보안 경고가 피해자에게 `Win+X, I`로 Windows Terminal을 직접 열어 명령을 붙여넣도록 유도하며, 최종 페이로드는 Lumma Stealer. TerminalFix(가짜 Cloudflare Turnstile → `gitnow[.]dev` 역방향 터널, 2026-08-28 공개)와는 유인 메커니즘·시작 시점·최종 페이로드가 모두 달라 별개 캠페인으로 판단 — 이번 실행에서도 직접 페치 시도 없이 상태 유지, 계속 미검증. TerminalFix IOC에 포함하지 않음.
+- Microsoft가 2026년 2월경부터 추적한 별도의 Windows Terminal 악용 ClickFix 캠페인(TechRadar/VPNCentral/GadgetReview, 2026-11-05부터 기록) — 가짜 보안 경고가 피해자에게 `Win+X, I`로 Windows Terminal을 직접 열어 명령을 붙여넣도록 유도하며, 최종 페이로드는 Lumma Stealer. TerminalFix(가짜 Cloudflare Turnstile → `gitnow[.]dev` 역방향 터널, 2026-08-28 공개)와는 유인 메커니즘·시작 시점·최종 페이로드가 모두 달라 별개 캠페인으로 판단 — 이번 실행에서도 직접 페치 시도 없이 상태 유지, 계속 미검증. TerminalFix IOC에 포함하지 않음.
+- Microsoft Threat Intelligence가 2026년 10월경 보도했다는 또 다른 변종 — 손상된 사이트가 PNG로 위장한 스크립트를 브라우저 캐시에 미리 로드해두는 기법(검색 스니펫에서만 확인, 직접 페치 없음). TerminalFix의 RGBA 픽셀 스테가노그래피와는 다른 메커니즘이며 `gitnow.dev`나 `LockScreenContentServer.exe` 언급이 없어, 연관성 불명확한 별개/인접 변종으로 로그만 남김. TerminalFix IOC에 포함하지 않음.
 - Berlin/BSI/Rhysida 랜섬웨어 내러티브(미검증, 2026-09-16부터 연속 미확인) — 이번 실행에서 별도 검색 없음, 상태 변동 없음
 - Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(미검증, 2026-10-14부터 표류 중) — 이번 실행에서도 재확인 불가 상태 유지
-- SOC Prime의 "Vice Spider" 귀속 및 네트워크 피벗을 통한 "잠재적 랜섬웨어 배포" 위험 평가(미검증, 2026-10-14/21부터 표류 중) — Microsoft의 "미관찰" 명시와 상충되는 2차 보고의 위험 평가일 뿐, 이번 실행에서도 socprime.com 차단으로 재확인 불가
-- Mishcon의 PNG 스테가노그래피 ClickFix 분석("From clipboard to compromise", 2026-10 경) — TerminalFix와의 연관성 계속 미확인, 별도 변종으로 추정
+- SOC Prime의 "Vice Spider" 귀속 및 네트워크 피벗을 통한 "잠재적 랜섬웨어 배포" 위험 평가(미검증, 2026-10-14/21부터 표류 중) — 이번 실행 검색 스니펫에도 유사한 위험 평가 문구("lateral movement, privilege escalation, credential theft, security tool tampering, exfiltration, or ransomware" 가능성)가 재등장했으나 Microsoft의 "미관찰" 명시와 상충되는 2차 보고의 위험 평가일 뿐이며, socprime.com 직접 페치는 이번에도 차단되어 재확인 불가
 - Huntress/Mishcon/BleepingComputer 보도의 가짜 Windows Update 전체화면 유도 + PNG 스테가노그래피 변종(LummaC2/Rhadamanthys 페이로드) — TerminalFix와 다른 루어·페이로드로 별도 캠페인 분류, 변동 없음
 
 ## 차단 운영 포맷 (복붙용)
@@ -69,10 +69,8 @@ offlineupdater.com
 
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인, 변동 없음)
-- Malwarebytes "TerminalFix looks like ClickFix, but delivers a very different payload" (malwarebytes[.]com) — 2026-09 — blocked
+- CSO Online "Fake Cloudflare CAPTCHA tricks victims into opening a tunnel for attackers" (csoonline[.]com) — 날짜 미확인 — blocked
+- SC World "Microsoft identifies TerminalFix campaign spreading Python reverse tunnel" (scworld[.]com) — 날짜 미확인 — blocked
 - GridinSoft "TerminalFix Turns Fake CAPTCHA Into a Network Tunnel" (blog.gridinsoft[.]com) — 날짜 미확인 — blocked
-- SOC Prime "TerminalFix campaign builds reverse tunnels for persistent access" (socprime[.]com) — 날짜 미확인 — blocked
-- Anavem Security advisory (anavem[.]com) — 날짜 미확인 — blocked
-- Cybersecurity360.it "ClickFix evolve con TerminalFix" (cybersecurity360[.]it) — 날짜 미확인 — blocked
-- EuropeanPurpose "TerminalFix Exploits Fake CAPTCHAs for Cyber Intrusion" (europeanpurpose[.]com) — 날짜 미확인 — blocked
-- HendryAdrian "Microsoft warns of TerminalFix attacks deploying reverse tunnels" (hendryadrian[.]com) — 날짜 미확인 — blocked
+- TechRadar "New ClickFix campaign can deploy powerful multi-stage malware directly through Windows Terminal and PowerShell" (techradar[.]com) — 날짜 미확인 — blocked
+- SOC Prime "TerminalFix campaign enables network pivoting through compromised hosts" (socprime[.]com) — 2026-10-05 추정 — blocked
