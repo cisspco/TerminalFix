@@ -54,3 +54,13 @@ DeviceNetworkEvents
     or InitiatingProcessCommandLine has_any ("gitnow.dev", "bestsocialmedianewspapper.com", "offlineupdater.com")
 | project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, RemotePort,
     InitiatingProcessFileName, InitiatingProcessCommandLine
+
+// (f) Microsoft Defender AV detections matching the TerminalFix family names
+//     published in Microsoft's own IOC table (ClickFix/TermFix/Posilod droppers,
+//     DLLHijack.DAB!MTB for malicious dui70.dll, Indigo.SA for client.py)
+DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType == "AntivirusDetection"
+| extend ThreatName = tostring(parse_json(AdditionalFields).ThreatName)
+| where ThreatName has_any ("ClickFix", "TermFix", "Posilod", "DLLHijack.DAB", "Indigo.SA")
+| project Timestamp, DeviceName, AccountName, ThreatName, FolderPath, SHA256

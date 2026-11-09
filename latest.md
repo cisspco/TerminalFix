@@ -1,12 +1,12 @@
-# TerminalFix Snapshot — 2026-11-08 UTC
+# TerminalFix Snapshot — 2026-11-09 UTC
 
 ## 수집 상태
 - 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/)
-- 페치 차단: socprime[.]com, detection[.]fyi, vpncentral[.]com
-- seed: 4 (인프라 3 + 손상 사이트 1) / 신규 검증: 0 / 미검증: 0 (신규 인프라/해시 없음)
+- 페치 차단: dualmedia[.]com, vulners[.]com, startupdefense[.]io, blog.gridinsoft[.]com, malwarebytes[.]com
+- seed: 4 (인프라 3 + 손상 사이트 1) / 신규 검증: 0 (신규 세부사항은 verified로 직접 추가) / 미검증: 0
 
 ## 캠페인 개요
-변동 없음. 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 심고, 이를 Windows Terminal/PowerShell에 붙여넣도록 유도하는 ClickFix 계열 캠페인. ZIP 다운로드 → DLL 사이드로딩(`LockScreenContentServer.exe` + `dui70.dll`) → PNG 스테가노그래피 2차 페이로드 → 지속성(Run 키 + 예약 작업) → 내부 정찰 → 비동기 명령 루프 → `gitnow[.]dev`로의 TLS/WebSocket 역방향 터널로 이어짐. Microsoft 원본 블로그를 이번 실행에서 재확인했으며, 신규 IOC나 변경 사항은 없음. 권한 상승·보안 통제 변조·탈취·랜섬웨어 배포는 계속 미관찰로 명시됨.
+변동 없음. 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 심고, 이를 Windows Terminal/PowerShell에 붙여넣도록 유도하는 ClickFix 계열 캠페인. ZIP 다운로드 → DLL 사이드로딩(`LockScreenContentServer.exe` + `dui70.dll`) → PNG 스테가노그래피 2차 페이로드 → 지속성(Run 키 + 예약 작업) → 내부 정찰 → 비동기 명령 루프 → `gitnow[.]dev`로의 TLS/WebSocket 역방향 터널로 이어짐. Microsoft 원본 블로그를 이번 실행에서 재확인했고, IOC 표에서 이전에 기록되지 않았던 Defender 탐지명과 정찰 명령의 정확한 문법을 새로 추출했다(신규 인프라/해시는 없음). 권한 상승·보안 통제 변조·탈취·랜섬웨어 배포는 계속 미관찰로 명시됨.
 
 ## 공격 체인
 1. 가짜 CAPTCHA 유도 — 손상된 정상 사이트(`linked-log[.]com`)에 가짜 Cloudflare Turnstile 화면이 뜨고, 체크박스 클릭 시 악성 PowerShell 명령이 클립보드에 복사됨 (T1204.004)
@@ -14,7 +14,7 @@
 3. DLL 사이드로딩 — 정상 서명된 `LockScreenContentServer.exe`가 같은 디렉터리의 악성 `dui70.dll`을 로드 (정상 위치는 `C:\Windows\SystemApps`)
 4. 스테가노그래피 페이로드 — 3개 PNG 이미지의 RGBA 픽셀 데이터에서 후속 실행 파일/DLL을 재조립
 5. 지속성 — HKCU Run 키 및 약 60분 주기 예약 작업(`LockScreenContentServer_MuODG5yBM`)이 `LockScreenContentServer.exe`를 재실행; 페이로드 폴더는 숨김+시스템 속성
-6. 내부 정찰 — `nltest`, `net group`, ADSI 질의(도메인 트러스트, Domain Admins, AD 사용자/컴퓨터), 내부 서버 핑 스윕 (영/스페인/독 다국어 변형)
+6. 내부 정찰 — `nltest /domain_trusts`, `nltest /dclist:`, `net group "domain admins" /domain`, ADSI 질의(도메인 트러스트, Domain Admins, AD 사용자/컴퓨터), 내부 서버 핑 스윕 (영/스페인/독 다국어 변형)
 7. 비동기 명령 실행 — PowerShell 파일감시 루프가 텍스트 파일의 명령을 `Invoke-Expression`으로 실행하고 결과를 다른 파일에 기록
 8. 역방향 터널 — 내장형 Python 3.14.5 런타임의 `pythonw.exe`가 `client.py`(`--server`, `--uuid`, `cert.pem`)를 실행, `gitnow[.]dev:443`로 TLS/WebSocket 연결하여 내부 IPv4/IPv6/호스트명으로 임의 TCP 중계
 
@@ -41,22 +41,25 @@
 - ededeacf30e493dd632d477fe770ba419aa2848f685ea049381a0a8d2cc3e84d — 악성 dui70.dll — verified
 
 ## 호스트 IOC · 행위
-전날과 동일 (변동 없음). 상세는 `host-iocs.md` 참조: ProgramData 16진수 스테이징 폴더, `1.bat`, `LockScreenContentServer.exe`/`dui70.dll` 사이드로딩, HKCU Run 키 및 예약 작업(`LockScreenContentServer_MuODG5yBM`), 다국어(영/스페인/독) 정찰 스크립트, `client.py` 역방향 터널(7바이트 프레이밍, User-Agent 로테이션, `MSG_SHUTDOWN`).
+전날 대비 신규 항목 있음 (verified). 상세는 `host-iocs.md` 참조:
+- **신규** — Microsoft Defender 탐지명: `Trojan:Win32/ClickFix.*`, `Trojan:Win32/TermFix.*`, `Trojan:Win32/Posilod.*`, `Trojan:Win64/DLLHijack.DAB!MTB`(악성 `dui70.dll`), `Trojan:Python/Indigo.SA`(`client.py`) — Microsoft 원본 IOC 표에서 이번 실행에 처음 추출
+- **신규** — 정찰 명령의 정확한 문법: `nltest /domain_trusts`, `nltest /dclist:`, `net group "domain admins" /domain`
+- 기존 항목 재확인: ProgramData 16진수 스테이징 폴더, `1.bat`, `LockScreenContentServer.exe`/`dui70.dll` 사이드로딩, HKCU Run 키 및 예약 작업(`LockScreenContentServer_MuODG5yBM`), 다국어(영/스페인/독) 정찰 스크립트, `client.py` 역방향 터널(7바이트 프레이밍, User-Agent 로테이션, `MSG_SHUTDOWN`)
 
 ## 이번 실행 변경사항
 - 신규 인프라: 없음
 - 신규 해시: 없음
-- 승격(seed→검증): 없음 (모든 seed 항목이 이전 실행들에서 이미 검증됨; 이번 실행도 재확인만 수행)
+- 승격(seed→검증): 없음
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음. Microsoft 원본 블로그 재확인 성공 — 공격 체인·IOC 테이블·"다운스트림 행위 미관찰" 서술 모두 변동 없음. SOC Prime(우크라이나어 페이지), detection.fyi(Sigma 룰), VPNCentral은 모두 차단됨(DNS 미해석) — 세 도메인 모두 이번 실행에서 처음 시도했으나 역시 차단됨
+- 신규 보고서: 없음(Microsoft 원본 블로그 재확인 성공; 신규 세부사항은 verified로 host-iocs.md·hunting/defender-xdr.kql에 직접 추가 — Defender 탐지명, 정찰 명령 정확한 문법). 블로그의 "관련 게시물" 영역에 별개 캠페인 "ARTEX"(귀속: "Storm-3358")가 티저로 등장했으나 TerminalFix와 무관함을 확인(해당 명칭이 TerminalFix 본문에는 전혀 등장하지 않음) — IOC에 포함하지 않음.
 
 ## 인접 캠페인 (참고)
-- Microsoft가 2026년 2월경부터 추적한 별도의 Windows Terminal 악용 ClickFix 캠페인(TechRadar/VPNCentral/GadgetReview, 이번 실행에도 재등장) — 가짜 보안 경고가 피해자에게 `Win+X, I`로 Windows Terminal을 직접 열어 명령을 붙여넣도록 유도하며, 최종 페이로드는 Lumma Stealer. TerminalFix(가짜 Cloudflare Turnstile → `gitnow[.]dev` 역방향 터널, 2026-08-28 공개)와는 유인 메커니즘·시작 시점·최종 페이로드가 모두 달라 별개 캠페인으로 판단 — 계속 미검증. TerminalFix IOC에 포함하지 않음.
-- VPNCentral이 이번 실행에서 처음 보도한 "Velvet Tempest" 귀속 ClickFix 캠페인 — CastleRAT·DonutLoader를 미국 기반 모의 비영리단체 환경에서 2026-02-03~02-16 사이 단계적으로 전개했다는 랜섬웨어 전 단계(pre-ransomware) 침입으로 보도됨. 유인 방식·시기·페이로드가 TerminalFix와 전혀 다른 별개 캠페인으로 판단되며, 직접 페치는 시도하지 않음(검색 스니펫에서만 확인). TerminalFix IOC에 포함하지 않음.
-- Microsoft가 2026년 10월경 보도했다는 또 다른 변종 — 손상된 사이트가 PNG로 위장한 스크립트를 브라우저 캐시에 미리 로드해두는 기법(검색 스니펫에서만 확인, 직접 페치 없음). TerminalFix의 RGBA 픽셀 스테가노그래피와는 다른 메커니즘이며 `gitnow.dev`나 `LockScreenContentServer.exe` 언급이 없어, 연관성 불명확한 별개/인접 변종으로 로그만 남김. TerminalFix IOC에 포함하지 않음.
+- Microsoft가 2026년 2월경부터 추적한 별도의 Windows Terminal 악용 ClickFix 캠페인(TechRadar/VPNCentral/GadgetReview) — 가짜 보안 경고가 피해자에게 `Win+X, I`로 Windows Terminal을 직접 열어 명령을 붙여넣도록 유도하며, 최종 페이로드는 Lumma Stealer. TerminalFix와는 유인 메커니즘·시작 시점·최종 페이로드가 모두 달라 별개 캠페인으로 판단 — 계속 미검증. TerminalFix IOC에 포함하지 않음.
+- "Velvet Tempest" 귀속 ClickFix 캠페인(VPNCentral, 2026-02 테스트 환경 보도) — CastleRAT·DonutLoader, 유인/시기/페이로드 모두 다른 별개 캠페인. TerminalFix IOC에 포함하지 않음.
+- "ARTEX" / "Storm-3358" — Microsoft 블로그의 관련 게시물 티저에서 이번 실행에 처음 발견. TerminalFix 본문과 무관한 별개 캠페인으로 확인됨. 로그만 남김.
 - Berlin/BSI/Rhysida 랜섬웨어 내러티브(미검증, 2026-09-16부터 연속 미확인) — 이번 실행에서 별도 검색 없음, 상태 변동 없음
 - Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(미검증, 2026-10-14부터 표류 중) — 이번 실행에서도 재확인 불가 상태 유지
-- SOC Prime의 "Vice Spider" 귀속 및 네트워크 피벗을 통한 "잠재적 랜섬웨어 배포" 위험 평가(미검증, 2026-10-14/21부터 표류 중) — 이번 실행에서도 socprime.com 직접 페치가 차단되어 재확인 불가
+- SOC Prime의 "Vice Spider" 귀속 및 네트워크 피벗을 통한 "잠재적 랜섬웨어 배포" 위험 평가(미검증, 2026-10-14/21부터 표류 중) — 이번 실행에서도 재확인 불가
 
 ## 차단 운영 포맷 (복붙용)
 
@@ -68,7 +71,9 @@ offlineupdater.com
 ```
 
 ## 출처
-- [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인, 변동 없음)
-- SOC Prime "TerminalFix campaign builds reverse tunnels for persistent access" (socprime[.]com, 우크라이나어 페이지) — 날짜 미확인 — blocked
-- detection.fyi "Potential System DLL Sideloading From Non System Locations" (Sigma rule, dui70.dll 포함하나 TerminalFix/LockScreenContentServer.exe 언급 없음 추정) — blocked
-- VPNCentral "ClickFix Infostealer Evolves with Fake CAPTCHA Clipboard Hijacking in 2026 Campaigns" (vpncentral[.]com) — 날짜 미확인 — blocked
+- [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인; Defender 탐지명·정찰 명령 정확한 문법을 이번 실행에서 처음 추출)
+- dualmedia.com "TerminalFix Attack: How the New ClickFix Variant Works" — 날짜 미확인 — blocked
+- vulners.com (Captcha pages tag search) — blocked
+- startupdefense.io "ClickFix Attacks: Fake CAPTCHA" — 날짜 미확인 — blocked
+- blog.gridinsoft.com "TerminalFix Turns Fake CAPTCHA Into a Network Tunnel" — 날짜 미확인 — blocked
+- malwarebytes.com "TerminalFix looks like ClickFix, but delivers a very different payload" — 2026-09 — blocked
