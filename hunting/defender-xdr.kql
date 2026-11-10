@@ -64,3 +64,14 @@ DeviceEvents
 | extend ThreatName = tostring(parse_json(AdditionalFields).ThreatName)
 | where ThreatName has_any ("ClickFix", "TermFix", "Posilod", "DLLHijack.DAB", "Indigo.SA")
 | project Timestamp, DeviceName, AccountName, ThreatName, FolderPath, SHA256
+
+// (g) Microsoft Defender for Endpoint alerts matching the TerminalFix alert
+//     titles published in Microsoft's own IOC table (ClickFix activity,
+//     unexpected DLL load, suspicious scheduled task, proxy/tunneling tool use)
+AlertInfo
+| where Timestamp > ago(30d)
+| where Title has_any ("Possible ClickFix activity",
+    "An executable file loaded an unexpected DLL file",
+    "Suspicious scheduled task",
+    "Possibly malicious use of proxy or tunneling tool")
+| project Timestamp, AlertId, Title, Severity, ServiceSource, DetectionSource

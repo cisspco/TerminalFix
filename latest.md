@@ -1,12 +1,12 @@
-# TerminalFix Snapshot — 2026-11-09 UTC
+# TerminalFix Snapshot — 2026-11-10 UTC
 
 ## 수집 상태
 - 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/)
-- 페치 차단: dualmedia[.]com, vulners[.]com, startupdefense[.]io, blog.gridinsoft[.]com, malwarebytes[.]com
+- 페치 차단: gbhackers[.]com, hendryadrian[.]com, mishcon[.]com, vpncentral[.]com, itsmalware.substack[.]com, detection[.]fyi
 - seed: 4 (인프라 3 + 손상 사이트 1) / 신규 검증: 0 (신규 세부사항은 verified로 직접 추가) / 미검증: 0
 
 ## 캠페인 개요
-변동 없음. 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 심고, 이를 Windows Terminal/PowerShell에 붙여넣도록 유도하는 ClickFix 계열 캠페인. ZIP 다운로드 → DLL 사이드로딩(`LockScreenContentServer.exe` + `dui70.dll`) → PNG 스테가노그래피 2차 페이로드 → 지속성(Run 키 + 예약 작업) → 내부 정찰 → 비동기 명령 루프 → `gitnow[.]dev`로의 TLS/WebSocket 역방향 터널로 이어짐. Microsoft 원본 블로그를 이번 실행에서 재확인했고, IOC 표에서 이전에 기록되지 않았던 Defender 탐지명과 정찰 명령의 정확한 문법을 새로 추출했다(신규 인프라/해시는 없음). 권한 상승·보안 통제 변조·탈취·랜섬웨어 배포는 계속 미관찰로 명시됨.
+변동 없음. 가짜 Cloudflare Turnstile CAPTCHA가 클립보드에 PowerShell 명령을 심고, 이를 Windows Terminal/PowerShell에 붙여넣도록 유도하는 ClickFix 계열 캠페인. ZIP 다운로드 → DLL 사이드로딩(`LockScreenContentServer.exe` + `dui70.dll`) → PNG 스테가노그래피 2차 페이로드 → 지속성(Run 키 + 예약 작업) → 내부 정찰 → 비동기 명령 루프 → `gitnow[.]dev`로의 TLS/WebSocket 역방향 터널로 이어짐. Microsoft 원본 블로그를 이번 실행에서 재확인했고, 어제 기록한 Defender AV 탐지명과는 별개로 Defender for Endpoint **경고(alert) 제목** 4개를 새로 추출했다(신규 인프라/해시는 없음). 권한 상승·보안 통제 변조·탈취·랜섬웨어 배포는 계속 미관찰로 명시됨.
 
 ## 공격 체인
 1. 가짜 CAPTCHA 유도 — 손상된 정상 사이트(`linked-log[.]com`)에 가짜 Cloudflare Turnstile 화면이 뜨고, 체크박스 클릭 시 악성 PowerShell 명령이 클립보드에 복사됨 (T1204.004)
@@ -42,24 +42,23 @@
 
 ## 호스트 IOC · 행위
 전날 대비 신규 항목 있음 (verified). 상세는 `host-iocs.md` 참조:
-- **신규** — Microsoft Defender 탐지명: `Trojan:Win32/ClickFix.*`, `Trojan:Win32/TermFix.*`, `Trojan:Win32/Posilod.*`, `Trojan:Win64/DLLHijack.DAB!MTB`(악성 `dui70.dll`), `Trojan:Python/Indigo.SA`(`client.py`) — Microsoft 원본 IOC 표에서 이번 실행에 처음 추출
-- **신규** — 정찰 명령의 정확한 문법: `nltest /domain_trusts`, `nltest /dclist:`, `net group "domain admins" /domain`
-- 기존 항목 재확인: ProgramData 16진수 스테이징 폴더, `1.bat`, `LockScreenContentServer.exe`/`dui70.dll` 사이드로딩, HKCU Run 키 및 예약 작업(`LockScreenContentServer_MuODG5yBM`), 다국어(영/스페인/독) 정찰 스크립트, `client.py` 역방향 터널(7바이트 프레이밍, User-Agent 로테이션, `MSG_SHUTDOWN`)
+- **신규** — Microsoft Defender for Endpoint 경고(alert) 제목 4종: "Possible ClickFix activity", "An executable file loaded an unexpected DLL file"(`dui70.dll` 사이드로딩), "Suspicious scheduled task"(`LockScreenContentServer_MuODG5yBM`), "Possibly malicious use of proxy or tunneling tool"(`gitnow.dev` 역방향 터널) — 전날 기록한 Defender AV 탐지명과는 별개 항목으로, Microsoft 원본 IOC 표에서 이번 실행에 처음 추출
+- 기존 항목 재확인: ProgramData 16진수 스테이징 폴더, `1.bat`, `LockScreenContentServer.exe`/`dui70.dll` 사이드로딩, HKCU Run 키 및 예약 작업, 다국어(영/스페인/독) 정찰 스크립트, `client.py` 역방향 터널, Defender AV 탐지명(`Trojan:Win32/ClickFix.*` 등), 정찰 명령 정확한 문법
 
 ## 이번 실행 변경사항
 - 신규 인프라: 없음
 - 신규 해시: 없음
 - 승격(seed→검증): 없음
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음(Microsoft 원본 블로그 재확인 성공; 신규 세부사항은 verified로 host-iocs.md·hunting/defender-xdr.kql에 직접 추가 — Defender 탐지명, 정찰 명령 정확한 문법). 블로그의 "관련 게시물" 영역에 별개 캠페인 "ARTEX"(귀속: "Storm-3358")가 티저로 등장했으나 TerminalFix와 무관함을 확인(해당 명칭이 TerminalFix 본문에는 전혀 등장하지 않음) — IOC에 포함하지 않음.
+- 신규 보고서: 없음(Microsoft 원본 블로그 재확인 성공; 신규 세부사항은 verified로 host-iocs.md·hunting/defender-xdr.kql에 직접 추가 — Defender for Endpoint 경고 제목 4종). SOC Prime의 다국어 TerminalFix 미러("TerminalFix Campaign Builds Reverse Tunnels for Persistent Access")와 Malwarebytes 프랑스어 번역본이 검색 스니펫에 재등장했으나 신규 정보 없음(두 사이트 모두 직접 페치 시도하지 않음, 기존 차단 목록에 포함).
 
 ## 인접 캠페인 (참고)
-- Microsoft가 2026년 2월경부터 추적한 별도의 Windows Terminal 악용 ClickFix 캠페인(TechRadar/VPNCentral/GadgetReview) — 가짜 보안 경고가 피해자에게 `Win+X, I`로 Windows Terminal을 직접 열어 명령을 붙여넣도록 유도하며, 최종 페이로드는 Lumma Stealer. TerminalFix와는 유인 메커니즘·시작 시점·최종 페이로드가 모두 달라 별개 캠페인으로 판단 — 계속 미검증. TerminalFix IOC에 포함하지 않음.
+- Microsoft가 2026년 2월경부터 추적한 별도의 Windows Terminal 악용 ClickFix 캠페인(TechRadar/VPNCentral/GadgetReview) — 가짜 보안 경고가 피해자에게 `Win+X, I`로 Windows Terminal을 직접 열어 명령을 붙여넣도록 유도하며, 최종 페이로드는 Lumma Stealer. 이번 실행 검색에서도 재등장했으나 신규 세부사항 없음. TerminalFix와는 유인 메커니즘·시작 시점·최종 페이로드가 모두 달라 별개 캠페인으로 판단 — 계속 미검증. TerminalFix IOC에 포함하지 않음.
 - "Velvet Tempest" 귀속 ClickFix 캠페인(VPNCentral, 2026-02 테스트 환경 보도) — CastleRAT·DonutLoader, 유인/시기/페이로드 모두 다른 별개 캠페인. TerminalFix IOC에 포함하지 않음.
-- "ARTEX" / "Storm-3358" — Microsoft 블로그의 관련 게시물 티저에서 이번 실행에 처음 발견. TerminalFix 본문과 무관한 별개 캠페인으로 확인됨. 로그만 남김.
+- "ARTEX" / "Storm-3358" — Microsoft 블로그의 관련 게시물 티저에서 발견된 별개 캠페인(2026-11-09 기록). TerminalFix 본문과 무관함 확인됨. 로그만 남김.
 - Berlin/BSI/Rhysida 랜섬웨어 내러티브(미검증, 2026-09-16부터 연속 미확인) — 이번 실행에서 별도 검색 없음, 상태 변동 없음
 - Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속(미검증, 2026-10-14부터 표류 중) — 이번 실행에서도 재확인 불가 상태 유지
-- SOC Prime의 "Vice Spider" 귀속 및 네트워크 피벗을 통한 "잠재적 랜섬웨어 배포" 위험 평가(미검증, 2026-10-14/21부터 표류 중) — 이번 실행에서도 재확인 불가
+- 별도의 가짜 Windows Update 화면 기반 ClickFix 캠페인(이미지 스테가노그래피로 LummaC2/Rhadamanthys 전달) — 검색 결과에 재등장, 유인/페이로드가 달라 TerminalFix와 무관한 별개 캠페인으로 계속 분류
 
 ## 차단 운영 포맷 (복붙용)
 
@@ -71,9 +70,10 @@ offlineupdater.com
 ```
 
 ## 출처
-- [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인; Defender 탐지명·정찰 명령 정확한 문법을 이번 실행에서 처음 추출)
-- dualmedia.com "TerminalFix Attack: How the New ClickFix Variant Works" — 날짜 미확인 — blocked
-- vulners.com (Captcha pages tag search) — blocked
-- startupdefense.io "ClickFix Attacks: Fake CAPTCHA" — 날짜 미확인 — blocked
-- blog.gridinsoft.com "TerminalFix Turns Fake CAPTCHA Into a Network Tunnel" — 날짜 미확인 — blocked
-- malwarebytes.com "TerminalFix looks like ClickFix, but delivers a very different payload" — 2026-09 — blocked
+- [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인; Defender for Endpoint 경고 제목 4종을 이번 실행에서 처음 추출)
+- gbhackers.com "ClickFix Attack Uses Fake Cloudflare Verification" — 날짜 미확인 — blocked
+- hendryadrian.com "TerminalFix Uses Fake Cloudflare CAPTCHAs to Deploy Reverse-Tunnel Backdoor" — 날짜 미확인 — blocked
+- mishcon.com "From clipboard to compromise: steganographic techniques observed in ClickFix campaign" — 날짜 미확인 — blocked
+- vpncentral.com "New ClickFix campaign uses Windows Terminal to launch Lumma Stealer" — 날짜 미확인 — blocked
+- itsmalware.substack.com "ClickFix attack uses fake Windows..." — 날짜 미확인 — blocked
+- detection.fyi "Potential System DLL Sideloading From Non System Locations" (Sigma rule) — 날짜 미확인 — blocked
