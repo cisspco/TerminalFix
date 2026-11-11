@@ -66,12 +66,23 @@ DeviceEvents
 | project Timestamp, DeviceName, AccountName, ThreatName, FolderPath, SHA256
 
 // (g) Microsoft Defender for Endpoint alerts matching the TerminalFix alert
-//     titles published in Microsoft's own IOC table (ClickFix activity,
-//     unexpected DLL load, suspicious scheduled task, proxy/tunneling tool use)
+//     titles published in Microsoft's own IOC table. Two of these titles
+//     ("Potential initial access led to ransomware attempt",
+//     "Possible hands-on-keyboard pre-ransom activity") are Defender's
+//     generic alert-naming strings, not evidence that ransomware or
+//     hands-on-keyboard activity was observed in the TerminalFix chain.
 AlertInfo
 | where Timestamp > ago(30d)
 | where Title has_any ("Possible ClickFix activity",
     "An executable file loaded an unexpected DLL file",
     "Suspicious scheduled task",
-    "Possibly malicious use of proxy or tunneling tool")
+    "Possibly malicious use of proxy or tunneling tool",
+    "Possible initial access from an emerging threat",
+    "Potential initial access led to ransomware attempt",
+    "Anomaly detected in ASEP registry",
+    "Suspicious Scheduled Task Process Launched",
+    "Suspicious LDAP query",
+    "Suspicious Active Directory enumeration",
+    "Possible hands-on-keyboard pre-ransom activity",
+    "Anomalous account lookups")
 | project Timestamp, AlertId, Title, Severity, ServiceSource, DetectionSource
