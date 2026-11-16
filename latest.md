@@ -1,8 +1,8 @@
-# TerminalFix Snapshot — 2026-11-15 UTC
+# TerminalFix Snapshot — 2026-11-16 UTC
 
 ## 수집 상태
 - 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion) (재확인, 변동 없음)
-- 페치 차단(DNS 미해결, 세션 허용 도메인 외): cirt.gov.bd, thaicert.or.th, radar.offseq.com, hivepro.com, securityarsenal.com, cybersecuritynews.com, techjacksolutions.com
+- 페치 차단(DNS 미해결, 세션 허용 도메인 외): malwarebytes.com, securityarsenal.com, hivepro.com, radar.offseq.com, scworld.com
 - seed: 0 (전량 이전 실행에서 검증 완료) / 신규 검증: 0 / 미검증: 0
 
 ## 캠페인 개요
@@ -48,7 +48,7 @@
 - 신규 해시: 없음
 - 승격(seed→검증): 없음
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음 (Microsoft 원본 블로그 재확인 성공, 변동 없음). cirt.gov.bd, thaicert.or.th, radar.offseq.com, hivepro.com, securityarsenal.com, cybersecuritynews.com, techjacksolutions.com 7개 URL 페치 시도는 세션 네트워크 정책상 DNS 미해결로 모두 차단됨.
+- 신규 보고서: 없음 (Microsoft 원본 블로그 재확인 성공, 변동 없음). malwarebytes.com, securityarsenal.com, hivepro.com, radar.offseq.com, scworld.com 5개 URL 페치 시도는 세션 네트워크 정책상 DNS 미해결로 모두 차단됨.
 
 ## 인접 캠페인 (참고)
 - "DOUBLECUP" ClickFix-as-a-Service 변종(브라우저 캐시에 PNG로 위장한 스크립트를 사전 캐싱, CountLoader/DeviceManager RAT 전달) — 유인 메커니즘과 페이로드가 달라 별개 캠페인으로 분류, gitnow.dev나 LockScreenContentServer.exe 언급 없음. TerminalFix IOC에 포함하지 않음.
@@ -67,10 +67,10 @@ offlineupdater.com
 
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion) — 2026-08-28 — fetched (재확인, 변동 없음)
-- cirt.gov.bd "TerminalFix campaign" advisory — 날짜 미확인 — blocked
-- thaicert.or.th "Warning: TerminalFix Campaign Delivers Malware Through Fake CAPTCHA Pages" — 날짜 미확인 — blocked
-- radar.offseq.com "TerminalFix campaign deploys a reverse tunnel through multistage intrusion" (mirror) — 날짜 미확인 — blocked
-- hivepro.com "TerminalFix: Fake Cloudflare Checks Open a Reverse Tunnel" — 날짜 미확인 — blocked
-- securityarsenal.com "TerminalFix ClickFix Campaign: Defending Against Fake CAPTCHA Lures..." — 날짜 미확인 — blocked
-- cybersecuritynews.com "Fake Cloudflare CAPTCHA..." — 날짜 미확인 — blocked
-- techjacksolutions.com (TerminalFix mirror) — 날짜 미확인 — blocked
+- SOC Prime "TerminalFix Campaign Builds Reverse Tunnels for Persistent Access" (multi-language mirrors) — 날짜 미확인 — blocked
+- GridinSoft "TerminalFix Turns Fake CAPTCHA Into a Network Tunnel" — 날짜 미확인 — blocked
+- Hivepro "TerminalFix: Fake Cloudflare Checks Open a Reverse Tunnel" — 날짜 미확인 — blocked
+- Security Arsenal "TerminalFix ClickFix Campaign: Defending Against Fake CAPTCHA Lures..." — 날짜 미확인 — blocked
+- radar.offseq.com (Microsoft mirror) — 날짜 미확인 — blocked
+- SC World "Microsoft identifies TerminalFix campaign spreading Python reverse tunnel" — 날짜 미확인 — blocked
+- Malwarebytes "TerminalFix looks like ClickFix, but delivers a very different payload" — 2026-09 — blocked
