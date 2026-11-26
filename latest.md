@@ -1,8 +1,8 @@
-# TerminalFix Snapshot — 2026-11-25 UTC
+# TerminalFix Snapshot — 2026-11-26 UTC
 
 ## 수집 상태
-- 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) (재확인, 변동 없음)
-- 페치 차단(DNS 미해결): www.hivepro.com, www.sophos.com, www.menlosecurity.com, anavem.com
+- 페치 성공: [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) (재확인, 변동 없음); [Google Threat Intelligence 블로그 목록](https://cloud.google.com/blog/topics/threat-intelligence) (TerminalFix 관련 게시물 없음 확인)
+- 페치 차단(DNS 미해결): rhisac.org, www.hivepro.com
 - seed: 0 (전량 이전 실행에서 검증 완료) / 신규 검증: 0 / 미검증: 0
 
 ## 캠페인 개요
@@ -48,16 +48,15 @@
 - 신규 해시: 없음
 - 승격(seed→검증): 없음
 - 폐기(sinkhole/takedown): 없음
-- 신규 보고서: 없음. Microsoft 원본 블로그 재확인 성공 — 공격 체인·도메인 4개(공격자 3 + 손상 1)·해시 11개 모두 동일하게 재확인됨. www.hivepro.com, www.sophos.com, www.menlosecurity.com, anavem.com 4개 URL은 DNS 미해결(세션 네트워크 정책상 미허용 도메인)로 차단됨 — 검색 스니펫상 기존에 이미 기록된 캠페인 재보도(Sophos STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속 주장, Dark Reading의 명명 회의론, Menlo Security의 ClickFix 서버사이드 폴리모피즘 분석 등)로 추정되며 직접 확인 불가, 신규 정보 없음.
+- 신규 보고서: 없음. Microsoft 원본 블로그 재확인 성공 — 공격 체인·도메인 4개(공격자 3 + 손상 1)·해시 11개 모두 동일하게 재확인됨. Google Threat Intelligence 블로그 목록도 재확인했으나 TerminalFix 관련 게시물 없음. rhisac.org, www.hivepro.com 2개 URL은 DNS 미해결(세션 네트워크 정책상 미허용 도메인)로 차단됨 — 검색 스니펫상 기존에 이미 기록된 캠페인 재보도(RH-ISAC의 섹터 타겟팅 주장, HivePro의 "TerminalFix: Fake Cloudflare Checks Open a Reverse Tunnel")로 추정되며 직접 확인 불가, 신규 정보 없음.
 
 ## 인접 캠페인 (참고)
-- Sophos "TerminalFix and Lorem Ipsum Loader enable covert tunneling" (STAC4924 → Lorem Ipsum Loader → GOLD VICTOR 귀속 주장) — www.sophos.com 직접 페치는 이번 실행에서도 DNS 차단되어 실패; 검증되지 않은 상태로 유지.
+- Sophos "TerminalFix and Lorem Ipsum Loader enable covert tunneling" (STAC4924 → Lorem Ipsum Loader → GOLD VICTOR 귀속 주장) — 이번 실행에서도 직접 페치 미시도(표준 차단 목록); 검증되지 않은 상태로 유지.
 - Dark Reading — TerminalFix 명명에 대한 회의론 제기(복수 2차 보도에서 언급); darkreading.com은 표준 차단 목록에 포함되어 직접 확인 불가.
-- Menlo Security "The Evolution of ClickFix: From Cleartext to Server Side Polymorphism" — 가짜 Cloudflare/Google reCAPTCHA를 이용한 광범위한 ClickFix 웨이브가 2026-03-25경 시작되어 4월 말~5월 초 급증했다는 주장; www.menlosecurity.com 직접 페치는 DNS 차단되어 확인 불가. TerminalFix와의 직접적 연관성은 불명확.
-- SOC Prime "TerminalFix Campaign Builds Reverse Tunnels for Persistent Access" — Vice Spider(Rhysida 이명) 귀속 및 독일 매체/BSI 보도 연계 주장 반복 노출; 직접 미페치, 미검증 유지.
+- SOC Prime "TerminalFix Campaign Builds/Enables Reverse Tunnels for Persistent Access" — Vice Spider(Rhysida 이명) 귀속 및 독일 매체/BSI 보도 연계 주장 반복 노출; 직접 미페치, 미검증 유지.
 - Malwarebytes "TerminalFix looks like ClickFix, but delivers a very different payload" — 2차 보도, www.malwarebytes.com 표준 차단 목록으로 직접 확인 불가.
-- HivePro "TerminalFix: Fake Cloudflare Checks Open a Reverse Tunnel" — 2차 보도, www.hivepro.com DNS 차단으로 직접 확인 불가.
-- RH-ISAC "TerminalFix Campaign Targets Multiple Critical Sectors with ClickFix Variant" — 2차 보도, 직접 미페치.
+- RH-ISAC "TerminalFix Campaign Targets Multiple Critical Sectors with ClickFix Variant" — 2차 보도, rhisac.org 이번 실행에서 DNS 차단으로 직접 확인 불가.
+- HivePro "TerminalFix: Fake Cloudflare Checks Open a Reverse Tunnel" — 2차 보도, www.hivepro.com 이번 실행에서 DNS 차단으로 직접 확인 불가.
 - 2025-11 스테가노그래피 ClickFix 웨이브(Malwarebytes/The Register/Huntress/Mishcon, 가짜 Windows Update 화면 → LummaC2/Rhadamanthys) — 다른 유인(Windows Update가 아닌 Cloudflare Turnstile)·다른 페이로드로 TerminalFix와 무관.
 - DOUBLECUP(브라우저 캐시 PNG 선적재, CountLoader/DeviceManager RAT), Windows-Terminal 남용형 Lumma Stealer 캠페인(2026-02경 추정 시작), STAC4924/Lorem Ipsum Loader/GOLD VICTOR 귀속 주장, Berlin/BSI/Rhysida 2차 랜섬웨어 피해 주장 — 모두 기존 실행에서 기록된 인접/미검증 항목으로 변동 없음.
 
@@ -72,7 +71,6 @@ offlineupdater.com
 
 ## 출처
 - [TerminalFix campaign deploys a reverse tunnel through multistage intrusion](https://www.microsoft.com/en-us/security/blog/2026/08/28/terminalfix-campaign-deploys-reverse-tunnel-through-multistage-intrusion/) — 2026-08-28 — fetched (재확인, 변동 없음)
+- [Google Threat Intelligence — Threat Intelligence blog](https://cloud.google.com/blog/topics/threat-intelligence) — 날짜 미표시 — fetched (TerminalFix 관련 게시물 없음)
+- rhisac.org/?p=18182 ("TerminalFix Campaign Targets Multiple Critical Sectors with ClickFix Variant") — 날짜 미확인 — blocked (DNS)
 - www.hivepro.com/threat-advisory/terminalfix-fake-cloudflare-checks-open-a-reverse-tunnel — 날짜 미확인 — blocked (DNS)
-- www.sophos.com/en-us/blog/terminalfix-and-lorem-ipsum-loader-enable-covert-tunneling — 날짜 미확인 — blocked (DNS)
-- www.menlosecurity.com/blog/the-evolution-of-clickfix-from-cleartext-to-server-side-polymorphism — 날짜 미확인 — blocked (DNS)
-- anavem.com/news/terminalfix-clickfix-fake-cloudflare-captcha-reverse-tunnel-backdoor — 날짜 미확인 — blocked (DNS)
